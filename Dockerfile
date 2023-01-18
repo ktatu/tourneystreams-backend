@@ -14,7 +14,7 @@ RUN mkdir /app
 WORKDIR /app
 
 # cloning and building frontend
-RUN git clone git@github.com:ktatu/apextourneystreams-frontend.git \
+RUN git clone https://github.com/ktatu/apextourneystreams-frontend.git \
     && cd apextourneystreams-frontend \
     && npm install --production \
     && npm run build
