@@ -16,7 +16,7 @@ WORKDIR /app
 # cloning and building frontend
 RUN git clone https://github.com/ktatu/apextourneystreams-frontend.git \
     && cd apextourneystreams-frontend \
-    && npm install --production \
+    && npm install \
     && npm run build
 
 RUN mv apextourneystreams-frontend/build . \
