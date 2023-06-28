@@ -13,19 +13,19 @@ router.get("/", (req, res) => {
 
 //router.get("/auth", passport.authenticate("twitch", { scope: "user:read:follows", session: false }))
 
-router.get("/auth", (req, res) => {
+router.get("/auth", (req, res, next) => {
     const authenticator = passport.authenticate("twitch", {
         scope: "user:read:follows",
         session: false,
         state: JSON.stringify(req.query),
     })
 
-    authenticator(req, res)
+    authenticator(req, res, next)
 })
 
 router.get(
     "/redirect",
-    passport.authenticate("twitch", { failureRedirect: "http://localhost:3000", session: false }),
+    passport.authenticate("twitch", { failureRedirect: CLIENT_URL, session: false }),
     (req, res) => {
         if (!req.user) {
             return res.status(500)
