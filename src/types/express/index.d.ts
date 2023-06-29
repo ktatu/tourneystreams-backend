@@ -4,7 +4,10 @@ export {}
 declare global {
     namespace Express {
         interface User {
-            twitchToken: string
+            twitchJWTToken?: string
+            accessToken?: string
+            refreshToken?: string
+            userId?: string
         }
     }
 }

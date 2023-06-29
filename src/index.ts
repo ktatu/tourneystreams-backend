@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import twitchRouter from "./routes/twitch"
 import "./services/OAuth2Strategy"
+import "./services/JSONWebTokenStrategy"
 
 const app = express()
 app.use(cors())
