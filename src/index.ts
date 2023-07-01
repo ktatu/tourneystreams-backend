@@ -9,9 +9,10 @@ app.use(cors())
 app.use(express.json())
 app.use("/api/twitch", twitchRouter)
 
+/*
 app.get("/api", (_req, res) => {
     res.send("test")
-})
+})*/
 
 const PORT = process.env.PORT || 3001
 

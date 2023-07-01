@@ -3,31 +3,36 @@ import passport from "passport"
 import { CLIENT_URL, TWITCH_CLIENT_ID } from "../envConfig"
 import { format } from "url"
 import axios from "axios"
+import parseFollowedStream from "../utils/parseFollowedStream"
+import { FollowedStream } from "../types"
 
 const router = express.Router()
 
-// haetaan seuratut kanavat
-router.get("/", (req, res) => {
-    console.log("req query ", req.query)
-    res.status(200).send("ok")
+router.get("/", passport.authenticate("jwt", { session: false }), async (req, res) => {
+    try {
+        const twitchRes = await axios.get("https://api.twitch.tv/helix/streams/followed", {
+            headers: {
+                Authorization: `Bearer ${req.user?.accessToken}`,
+                "Client-Id": TWITCH_CLIENT_ID,
+            },
+            params: { user_id: req.user?.userId, first: 100 },
+        })
+
+        const followedStreams: Array<FollowedStream> = twitchRes.data.data.map(
+            (dataEntry: unknown) => parseFollowedStream(dataEntry)
+        )
+
+        return res.json(followedStreams)
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error(error.message)
+        } else {
+            console.error("Unable to retrieve and parse followed streams data")
+        }
+
+        return res.status(500).end()
+    }
 })
-
-router.get("/test", passport.authenticate("jwt", { session: false }), async (req, res) => {
-    console.log("req user ", req.user)
-    const twitchRes = await axios.get("https://api.twitch.tv/helix/streams/followed", {
-        headers: {
-            Authorization: `Bearer ${req.user?.accessToken}`,
-            "Client-Id": TWITCH_CLIENT_ID,
-        },
-        params: { user_id: req.user?.userId, first: 100 },
-    })
-
-    console.log("twitch res data ", twitchRes.data)
-
-    res.status(200).end()
-})
-
-//router.get("/auth", passport.authenticate("twitch", { scope: "user:read:follows", session: false }))
 
 router.get("/auth", (req, res, next) => {
     const authenticator = passport.authenticate("twitch", {
@@ -37,6 +42,17 @@ router.get("/auth", (req, res, next) => {
     })
 
     authenticator(req, res, next)
+})
+
+router.delete("/auth", passport.authenticate("jwt", { session: false }), async (req, res) => {
+    const twitchRes = await axios.post(
+        "https://id.twitch.tv/oauth2/revoke",
+        { client_id: TWITCH_CLIENT_ID, token: req.user?.accessToken },
+        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+    )
+    console.log("twitch res ", twitchRes)
+
+    res.status(twitchRes.status).end()
 })
 
 router.get(
