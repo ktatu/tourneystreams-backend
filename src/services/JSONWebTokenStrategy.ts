@@ -7,6 +7,7 @@ const JWTStrategy = passport.use(
     new Strategy(
         { jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: JWT_SECRET },
         (jwt_payload, done) => {
+            console.log("jwt payload ", jwt_payload)
             return done(null, jwt_payload)
         }
     )
