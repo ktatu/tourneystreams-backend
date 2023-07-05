@@ -93,6 +93,7 @@ const getRefreshedToken = async (refreshToken: string) => {
     }
 }*/
 
+// https://dev.twitch.tv/docs/authentication/refresh-tokens/
 const getRefreshedToken = async (refreshToken: string) => {
     const res = await axios.post(
         "https://id.twitch.tv/oauth2/token",

@@ -76,7 +76,7 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
 })*/
 
 router.get("/", passport.authenticate("jwt", { session: false }), async (req, res) => {
-    // TODO: better way of handling this
+    // TODO: better way of handling this. In OAuth2Strategy?
     if (!req.user) {
         return res.status(500).end()
     }
@@ -85,8 +85,8 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
         const followedStreams: Array<FollowedStream> = twitchResData.map((dataEntry: unknown) =>
             parseFollowedStream(dataEntry)
         )
-
-        return res.json(followedStreams)
+        console.log("returning followed streams")
+        return res.json({ streams: followedStreams })
     } catch (error: unknown) {
         if (error instanceof AxiosError) {
             if (error.response?.status === 401) {
@@ -94,7 +94,8 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
                     const { newAccessToken, newRefreshToken } = await getRefreshedToken(
                         req.user.refreshToken
                     )
-                    const twitchResData = await getFollowed(newAccessToken, newRefreshToken)
+
+                    const twitchResData = await getFollowed(newAccessToken, req.user?.userId)
                     const followedStreams: Array<FollowedStream> = twitchResData.map(
                         (dataEntry: unknown) => parseFollowedStream(dataEntry)
                     )
@@ -107,9 +108,13 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
                         JWT_SECRET
                     )
 
+                    console.log("old twitch token ", req.user.twitchJWTToken)
+                    console.log("new twitch token ", newJwtToken)
+
+                    res.clearCookie("twitch-token")
                     res.cookie("twitch-token", newJwtToken)
                     console.log("data retrieved with refreshed token")
-                    return res.json(followedStreams)
+                    return res.json({ streams: followedStreams, newToken: newJwtToken })
                 } catch (error: unknown) {
                     console.log("failed to retrieve data with refreshed token")
                     return res.status(500).end()
