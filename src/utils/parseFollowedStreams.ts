@@ -1,6 +1,22 @@
 import { FollowedStream } from "../types"
 
-const parseFollowedStream = (rawData: unknown) => {
+const parseFollowedStreams = (rawDataArray: Array<unknown>) => {
+    let parsedArray: Array<FollowedStream> = []
+
+    rawDataArray.forEach((dataObj) => {
+        try {
+            const followedStream = parseRawData(dataObj)
+            parsedArray.push(followedStream)
+        } catch (error: unknown) {
+            console.error("Error parsing followed streams")
+            console.error(error)
+        }
+    })
+
+    return parsedArray
+}
+
+const parseRawData = (rawData: unknown) => {
     if (!rawData || typeof rawData !== "object") {
         throw new Error("Data missing or raw data is not an object")
     }
@@ -22,7 +38,7 @@ const parseFollowedStream = (rawData: unknown) => {
     }
 
     const followedStream: FollowedStream = {
-        game: parseString(rawData.game_name, "game"),
+        category: parseString(rawData.game_name, "game"),
         title: parseString(rawData.title, "title"),
         loginName: parseString(rawData.user_login, "loginName"),
         broadcastName: parseString(rawData.user_name, "broadcastName"),
@@ -34,6 +50,7 @@ const parseFollowedStream = (rawData: unknown) => {
 
 const parseString = (stringValue: unknown, key: string) => {
     if (typeof stringValue !== "string") {
+        console.error("Value causing error: ", stringValue)
         throw new Error(`Key ${key}: expected string, was ${typeof stringValue}`)
     }
 
@@ -41,11 +58,12 @@ const parseString = (stringValue: unknown, key: string) => {
 }
 
 const parseNumber = (numValue: unknown, key: string) => {
-    if (!numValue || typeof numValue !== "number") {
+    if (typeof numValue !== "number") {
+        console.error("Value causing error: ", numValue)
         throw new Error(`Key ${key}: expected number, was ${typeof numValue}`)
     }
 
     return numValue
 }
 
-export default parseFollowedStream
+export default parseFollowedStreams
