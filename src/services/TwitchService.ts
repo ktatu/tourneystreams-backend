@@ -1,18 +1,19 @@
-/*import { getFollowed, getRefreshedToken } from "../requests/twitch"
+/*import { getFollowed, getRefreshedToken } from "../external_requests/twitch"
 import { FollowedStream } from "../types"
-import parseFollowedStream from "../utils/parseFollowedStream"
+import parseRawData from "../utils/parseFollowedStreams"
+
 
 const TwitchService = () => {
     const getFollowedStreams = async (accessToken: string, userId: string) => {
         try {
             const twitchResData = await getFollowed(accessToken, userId)
-            console.log(twitchResData)
+            const followedStreams: Array<FollowedStream> = twitchResData.map((dataEntry: unknown) =>
+                parseRawData(dataEntry)
+            )
         } catch (error: unknown) {
             console.log("error")
         }
     }
-}
+}*/
 
-export default TwitchService
-*/
-export default {}
+export default {} //TwitchService

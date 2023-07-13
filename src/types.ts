@@ -1,5 +1,5 @@
 export interface FollowedStream {
-    game: string
+    category: string
     title: string
     loginName: string
     broadcastName: string

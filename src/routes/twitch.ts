@@ -3,77 +3,12 @@ import passport from "passport"
 import { CLIENT_URL, TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, JWT_SECRET } from "../envConfig"
 import { format } from "url"
 import axios, { AxiosError } from "axios"
-import parseFollowedStream from "../utils/parseFollowedStream"
-import { FollowedStream } from "../types"
+import parseFollowedStreams from "../utils/parseFollowedStreams"
 import jwt from "jsonwebtoken"
-import { getFollowed, getRefreshedToken } from "../requests/twitch"
+import { getFollowed, getRefreshedToken } from "../external_requests/twitch"
 //import TwitchService from "../services/TwitchService"
 
 const router = express.Router()
-
-/*
-router.get("/", passport.authenticate("jwt", { session: false }), async (req, res) => {
-    try {
-        const twitchRes = await axios.get("https://api.twitch.tv/helix/streams/followed", {
-            headers: {
-                Authorization: `Bearer ${req.user?.accessToken}`,
-                "Client-Id": TWITCH_CLIENT_ID,
-            },
-            params: { user_id: req.user?.userId, first: 100 },
-        })
-
-        const followedStreams: Array<FollowedStream> = twitchRes.data.data.map(
-            (dataEntry: unknown) => parseFollowedStream(dataEntry)
-        )
-
-        return res.json(followedStreams)
-    } catch (error: unknown) {
-        if (error instanceof AxiosError) {
-            if (error.response?.data.message === "Invalid OAuth token") {
-                console.log("invalid token, request new one")
-                try {
-                    const twitchRes = await axios.post(
-                        "https://id.twitch.tv/oauth2/token",
-                        {
-                            client_id: TWITCH_CLIENT_ID,
-                            client_secret: TWITCH_CLIENT_SECRET,
-                            grant_type: "refresh_token",
-                            refresh_token: req.user?.refreshToken,
-                        },
-                        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-                    )
-
-                    console.log("twitchRes ", twitchRes)
-                    const { access_token, refresh_token } = twitchRes.data
-                    const jwtToken = jwt.sign(
-                        {
-                            accessToken: access_token,
-                            refreshToken: refresh_token,
-                            userId: req.user?.userId,
-                        },
-                        JWT_SECRET
-                    )
-                    console.log("jwt token ", jwtToken)
-                    res.cookie("twitch-token", jwtToken)
-                    return res.status(401).json({ newToken: jwtToken })
-                } catch (error: unknown) {
-                    if (error instanceof AxiosError) {
-                        console.error("axios error: status: ", error.response?.status)
-                        console.error("axios error: data: ", error.response?.data)
-                    } else {
-                        console.error("unknown error: ", error)
-                    }
-
-                    return res.status(500).end()
-                }
-            }
-        } else {
-            console.error("unknown error: ", error)
-        }
-
-        return res.status(500).end()
-    }
-})*/
 
 router.get("/", passport.authenticate("jwt", { session: false }), async (req, res) => {
     // TODO: better way of handling this. In OAuth2Strategy?
@@ -82,10 +17,13 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
     }
     try {
         const twitchResData = await getFollowed(req.user.accessToken, req.user.userId)
-        const followedStreams: Array<FollowedStream> = twitchResData.map((dataEntry: unknown) =>
-            parseFollowedStream(dataEntry)
-        )
-        console.log("returning followed streams")
+        // TODO: one of the parsed objects throwing error shouldnt cause the whole response to be thrown
+        // instead the object causing error is rejected and the rest are sent to frontend
+        /*const followedStreams: Array<FollowedStream> = twitchResData.map((dataEntry: unknown) =>
+            parseRawData(dataEntry)
+        )*/
+        const followedStreams = parseFollowedStreams(twitchResData)
+        console.log(twitchResData)
         return res.json({ streams: followedStreams })
     } catch (error: unknown) {
         if (error instanceof AxiosError) {
@@ -96,9 +34,7 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
                     )
 
                     const twitchResData = await getFollowed(newAccessToken, req.user?.userId)
-                    const followedStreams: Array<FollowedStream> = twitchResData.map(
-                        (dataEntry: unknown) => parseFollowedStream(dataEntry)
-                    )
+                    const followedStreams = parseFollowedStreams(twitchResData)
                     const newJwtToken = jwt.sign(
                         {
                             accessToken: newAccessToken,
@@ -122,69 +58,7 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
             }
         }
 
-        return res.status(500).end()
-    }
-})
-
-router.get("/newfollowed", passport.authenticate("jwt", { session: false }), async (req, res) => {
-    try {
-        const twitchRes = await axios.get("https://api.twitch.tv/helix/streams/followed", {
-            headers: {
-                Authorization: `Bearer ${req.user?.accessToken}`,
-                "Client-Id": TWITCH_CLIENT_ID,
-            },
-            params: { user_id: req.user?.userId, first: 100 },
-        })
-
-        const followedStreams: Array<FollowedStream> = twitchRes.data.data.map(
-            (dataEntry: unknown) => parseFollowedStream(dataEntry)
-        )
-
-        return res.json(followedStreams)
-    } catch (error: unknown) {
-        if (error instanceof AxiosError) {
-            if (error.response?.data.message === "Invalid OAuth token") {
-                console.log("invalid token, request new one")
-                try {
-                    const twitchRes = await axios.post(
-                        "https://id.twitch.tv/oauth2/token",
-                        {
-                            client_id: TWITCH_CLIENT_ID,
-                            client_secret: TWITCH_CLIENT_SECRET,
-                            grant_type: "refresh_token",
-                            refresh_token: req.user?.refreshToken,
-                        },
-                        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-                    )
-
-                    console.log("twitchRes ", twitchRes)
-                    const { access_token, refresh_token } = twitchRes.data
-                    const jwtToken = jwt.sign(
-                        {
-                            accessToken: access_token,
-                            refreshToken: refresh_token,
-                            userId: req.user?.userId,
-                        },
-                        JWT_SECRET
-                    )
-                    console.log("jwt token ", jwtToken)
-                    res.cookie("twitch-token", jwtToken)
-                    return res.status(401).json({ newToken: jwtToken })
-                } catch (error: unknown) {
-                    if (error instanceof AxiosError) {
-                        console.error("axios error: status: ", error.response?.status)
-                        console.error("axios error: data: ", error.response?.data)
-                    } else {
-                        console.error("unknown error: ", error)
-                    }
-
-                    return res.status(500).end()
-                }
-            }
-        } else {
-            console.error("unknown error: ", error)
-        }
-
+        console.error("unknown error: ", error)
         return res.status(500).end()
     }
 })
