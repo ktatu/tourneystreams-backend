@@ -7,7 +7,7 @@ import {
     TWITCH_CALLBACK_URL,
     JWT_SECRET,
 } from "../envConfig"
-import axios from "axios"
+import { getUserId } from "../external_requests/twitch"
 
 const OAuth2Strategy = passport.use(
     "twitch",
@@ -25,10 +25,7 @@ const OAuth2Strategy = passport.use(
             profile: Express.User,
             done: DoneCallback
         ) => {
-            const userRequestRes = await axios.get("https://api.twitch.tv/helix/users", {
-                headers: { "Client-ID": TWITCH_CLIENT_ID, Authorization: `Bearer ${accessToken}` },
-            })
-            const userId = userRequestRes.data.data[0].id
+            const userId = await getUserId(accessToken)
 
             const jwtToken = jwt.sign({ accessToken, refreshToken, userId }, JWT_SECRET)
             profile.twitchJWTToken = jwtToken

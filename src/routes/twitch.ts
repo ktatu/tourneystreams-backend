@@ -17,13 +17,8 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
     }
     try {
         const twitchResData = await getFollowed(req.user.accessToken, req.user.userId)
-        // TODO: one of the parsed objects throwing error shouldnt cause the whole response to be thrown
-        // instead the object causing error is rejected and the rest are sent to frontend
-        /*const followedStreams: Array<FollowedStream> = twitchResData.map((dataEntry: unknown) =>
-            parseRawData(dataEntry)
-        )*/
         const followedStreams = parseFollowedStreams(twitchResData)
-        console.log(twitchResData)
+        //console.log(twitchResData)
         return res.json({ streams: followedStreams })
     } catch (error: unknown) {
         if (error instanceof AxiosError) {
@@ -33,7 +28,7 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
                         req.user.refreshToken
                     )
 
-                    const twitchResData = await getFollowed(newAccessToken, req.user?.userId)
+                    const twitchResData = await getFollowed(newAccessToken, req.user.userId)
                     const followedStreams = parseFollowedStreams(twitchResData)
                     const newJwtToken = jwt.sign(
                         {

@@ -58,4 +58,14 @@ const getRefreshedToken = async (refreshToken: string) => {
     return { newAccessToken: res.data.access_token, newRefreshToken: res.data.refresh_token }
 }
 
-export { getFollowed, getRefreshedToken }
+const getUserId = async (accessToken: string) => {
+    const res = await axios.get("https://api.twitch.tv/helix/users", {
+        headers: { "Client-ID": TWITCH_CLIENT_ID, Authorization: `Bearer ${accessToken}` },
+    })
+
+    const userId = res.data.data[0].id
+
+    return userId
+}
+
+export { getFollowed, getRefreshedToken, getUserId }
