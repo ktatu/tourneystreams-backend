@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
-        "target": "ES6",
+        "target": "ES2022",
         "outDir": "./build/",
-        "module": "commonjs",
+        "module": "ES2022",
         "strict": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "moduleResolution": "Bundler"
     },
     "include": ["src"]
 }
