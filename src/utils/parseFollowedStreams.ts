@@ -1,4 +1,5 @@
 import { FollowedStream } from "../types"
+import { parseString, parseNumber } from "./parseHelpers"
 
 const parseFollowedStreams = (rawDataArray: Array<unknown>) => {
     let parsedArray: Array<FollowedStream> = []
@@ -46,24 +47,6 @@ const parseRawData = (rawData: unknown) => {
     }
 
     return followedStream
-}
-
-const parseString = (stringValue: unknown, key: string) => {
-    if (typeof stringValue !== "string") {
-        console.error("Value causing error: ", stringValue)
-        throw new Error(`Key ${key}: expected string, was ${typeof stringValue}`)
-    }
-
-    return stringValue
-}
-
-const parseNumber = (numValue: unknown, key: string) => {
-    if (typeof numValue !== "number") {
-        console.error("Value causing error: ", numValue)
-        throw new Error(`Key ${key}: expected number, was ${typeof numValue}`)
-    }
-
-    return numValue
 }
 
 export default parseFollowedStreams

@@ -8,6 +8,8 @@ import {
     JWT_SECRET,
 } from "../envConfig"
 import { getUserId } from "../external_requests/twitch"
+import twitchRepository from "../models/twitchUser"
+import { EntityId } from "redis-om"
 
 const OAuth2Strategy = passport.use(
     "twitch",
@@ -25,12 +27,39 @@ const OAuth2Strategy = passport.use(
             profile: Express.User,
             done: DoneCallback
         ) => {
-            const userId = await getUserId(accessToken)
+            let userId
+            let entityId: string
 
-            const jwtToken = jwt.sign({ accessToken, refreshToken, userId }, JWT_SECRET)
-            profile.twitchJWTToken = jwtToken
+            try {
+                userId = await getUserId(accessToken)
 
-            done(null, profile)
+                if (!userId) {
+                    return done(null, false)
+                }
+
+                const newUser = await twitchRepository.save({
+                    accessToken,
+                    refreshToken,
+                    userId,
+                })
+
+                if (!newUser[EntityId]) {
+                    throw new Error("Entity id missing")
+                }
+
+                entityId = newUser[EntityId]
+
+                await twitchRepository.expire(entityId, 2629800) // 1 month
+            } catch (error: unknown) {
+                console.error("OAuth2Strategy error: ", error)
+                return done(error)
+            }
+
+            const token = jwt.sign({ entityId }, JWT_SECRET)
+
+            profile.twitchToken = token
+
+            return done(null, profile)
         }
     )
 )

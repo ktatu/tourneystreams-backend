@@ -12,11 +12,16 @@ const router = express.Router()
 
 router.get("/", passport.authenticate("jwt", { session: false }), async (req, res) => {
     // TODO: better way of handling this. In OAuth2Strategy?
-    if (!req.user) {
+    // return res.status(200).send("ok")
+
+    if (!req.user?.twitchUser) {
         return res.status(500).end()
     }
+
+    const { accessToken, refreshToken, userId } = req.user.twitchUser
+
     try {
-        const twitchResData = await getFollowed(req.user.accessToken, req.user.userId)
+        const twitchResData = await getFollowed(accessToken, userId)
         const followedStreams = parseFollowedStreams(twitchResData)
         //console.log(twitchResData)
         return res.json({ streams: followedStreams })
@@ -25,22 +30,19 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
             if (error.response?.status === 401) {
                 try {
                     const { newAccessToken, newRefreshToken } = await getRefreshedToken(
-                        req.user.refreshToken
+                        refreshToken
                     )
 
-                    const twitchResData = await getFollowed(newAccessToken, req.user.userId)
+                    const twitchResData = await getFollowed(newAccessToken, userId)
                     const followedStreams = parseFollowedStreams(twitchResData)
                     const newJwtToken = jwt.sign(
                         {
                             accessToken: newAccessToken,
                             refreshToken: newRefreshToken,
-                            userId: req.user.userId,
+                            userId,
                         },
                         JWT_SECRET
                     )
-
-                    console.log("old twitch token ", req.user.twitchJWTToken)
-                    console.log("new twitch token ", newJwtToken)
 
                     res.clearCookie("twitch-token")
                     res.cookie("twitch-token", newJwtToken)
@@ -58,7 +60,10 @@ router.get("/", passport.authenticate("jwt", { session: false }), async (req, re
     }
 })
 
+/*
 router.get("/refresh", passport.authenticate("jwt", { session: false }), async (req, res) => {
+    const { }
+
     try {
         const twitchRes = await axios.post(
             "https://id.twitch.tv/oauth2/token",
@@ -89,7 +94,8 @@ router.get("/refresh", passport.authenticate("jwt", { session: false }), async (
 
         return res.status(500).end()
     }
-})
+    return res.status(200).send("ok")
+})*/
 
 router.get("/auth", (req, res, next) => {
     const authenticator = passport.authenticate("twitch", {
@@ -102,6 +108,7 @@ router.get("/auth", (req, res, next) => {
 })
 
 router.delete("/auth", passport.authenticate("jwt", { session: false }), async (req, res) => {
+    /*
     const twitchRes = await axios.post(
         "https://id.twitch.tv/oauth2/revoke",
         { client_id: TWITCH_CLIENT_ID, token: req.user?.accessToken },
@@ -110,6 +117,8 @@ router.delete("/auth", passport.authenticate("jwt", { session: false }), async (
     console.log("twitch res ", twitchRes)
 
     res.status(twitchRes.status).end()
+    */
+    return res.status(200).send("ok")
 })
 
 router.get(
@@ -123,7 +132,7 @@ router.get(
         const { state } = req.query
         const urlString = format({ pathname: CLIENT_URL, query: JSON.parse(state as string) })
 
-        res.cookie("twitch-token", req.user.twitchJWTToken)
+        res.cookie("twitch-token", req.user.twitchToken)
 
         return res.redirect(urlString)
     }
