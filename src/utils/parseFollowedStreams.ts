@@ -1,4 +1,4 @@
-import { FollowedStream } from "../types"
+import { FollowedStream } from "../types/types"
 import { parseString, parseNumber } from "./parseHelpers"
 
 const parseFollowedStreams = (rawDataArray: Array<unknown>) => {

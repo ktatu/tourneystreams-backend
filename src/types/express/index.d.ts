@@ -1,4 +1,5 @@
 import { TwitchUser } from "../types"
+import { Entity } from "redis-om"
 
 declare global {
     namespace Express {

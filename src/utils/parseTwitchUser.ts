@@ -1,6 +1,6 @@
 import { Entity } from "redis-om"
 import { TwitchUser } from "../types/types"
-import { parseString, parseNumber } from "./parseHelpers"
+import { parseString } from "./parseHelpers"
 
 const parseTwitchUser = (twitchUserEntity: Entity) => {
     const missingKeyErrorString = "Twitch user entity missing key: "
@@ -19,6 +19,7 @@ const parseTwitchUser = (twitchUserEntity: Entity) => {
         accessToken: parseString(twitchUserEntity.accessToken, "accessToken"),
         refreshToken: parseString(twitchUserEntity.refreshToken, "refreshToken"),
         userId: parseString(twitchUserEntity.userId, "userId"),
+        entityId: "123",
     }
 
     return parsedTwitchUser

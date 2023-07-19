@@ -1,4 +1,4 @@
-import { Repository, Entity, Schema } from "redis-om"
+import { Repository, Schema } from "redis-om"
 import redisClient from "../services/redisClient"
 
 const twitchUserSchema = new Schema("twitchUser", {

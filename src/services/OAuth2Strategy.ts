@@ -7,8 +7,8 @@ import {
     TWITCH_CALLBACK_URL,
     JWT_SECRET,
 } from "../envConfig"
-import { getUserId } from "../external_requests/twitch"
-import twitchRepository from "../models/twitchUser"
+import { getUserId } from "../external_requests/twitchRequests"
+import TwitchUserEntity from "../models/TwitchUserEntity"
 import { EntityId } from "redis-om"
 
 const OAuth2Strategy = passport.use(
@@ -37,7 +37,7 @@ const OAuth2Strategy = passport.use(
                     return done(null, false)
                 }
 
-                const newUser = await twitchRepository.save({
+                const newUser = await TwitchUserEntity.save({
                     accessToken,
                     refreshToken,
                     userId,
@@ -49,7 +49,7 @@ const OAuth2Strategy = passport.use(
 
                 entityId = newUser[EntityId]
 
-                await twitchRepository.expire(entityId, 2629800) // 1 month
+                await TwitchUserEntity.expire(entityId, 2629800) // 1 month
             } catch (error: unknown) {
                 console.error("OAuth2Strategy error: ", error)
                 return done(error)

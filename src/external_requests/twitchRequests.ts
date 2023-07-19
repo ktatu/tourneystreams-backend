@@ -1,12 +1,6 @@
 import axios, { AxiosError } from "axios"
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig"
 
-/*
-type TwitchApiError = {
-    statusCode: number
-    message?: string
-}*/
-
 axios.interceptors.response.use(
     (res) => {
         return res
@@ -44,6 +38,7 @@ const getFollowed = async (accessToken: string, userId: string) => {
 
 // https://dev.twitch.tv/docs/authentication/refresh-tokens/
 const getRefreshedToken = async (refreshToken: string) => {
+    console.log("get refreshed")
     const res = await axios.post(
         "https://id.twitch.tv/oauth2/token",
         {
@@ -60,9 +55,9 @@ const getRefreshedToken = async (refreshToken: string) => {
 
 const getUserId = async (accessToken: string) => {
     const res = await axios.get("https://api.twitch.tv/helix/users", {
-        headers: { "Client-ID": TWITCH_CLIENT_ID, Authorization: `Bearer ${accessToken}` },
+        headers: { Authorization: `Bearer ${accessToken}`, "Client-ID": TWITCH_CLIENT_ID },
     })
-    console.log("retrieved twitch user ", res.data.data[0])
+
     const userId = res.data.data[0].id
 
     if (typeof userId !== "string") {
