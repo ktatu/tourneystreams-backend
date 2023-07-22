@@ -1,26 +1,33 @@
 import passport from "passport"
 import { ExtractJwt, Strategy } from "passport-jwt"
 import { JWT_SECRET } from "../envConfig"
-import TwitchUserEntity from "../models/TwitchUserEntity"
-import parseTwitchUser from "../utils/parseTwitchUser"
+import TwitchUser from "../models/TwitchUser"
 
-const JWTStrategy = passport.use(
+passport.use(
     "jwt",
     new Strategy(
-        { jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), secretOrKey: JWT_SECRET },
+        {
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: JWT_SECRET,
+        },
         async (jwtPayload, done) => {
             try {
-                const twitchUserEntity = await TwitchUserEntity.fetch(jwtPayload.entityId)
-                const twitchUser = parseTwitchUser(twitchUserEntity)
+                const twitchUser = await TwitchUser.GetTwitchUser(jwtPayload.entityId)
                 const profile: Express.User = { twitchUser }
 
                 return done(null, profile)
             } catch (error: unknown) {
-                console.log("jwt strat error: ", error)
-                return done(null, false)
+                if (error instanceof Error) {
+                    console.error(error.message)
+
+                    if (error.message === "Missing or incomplete entity in database") {
+                        return done(null, false)
+                    }
+                }
+                return done(error)
             }
         }
     )
 )
 
-export default JWTStrategy
+export default {}

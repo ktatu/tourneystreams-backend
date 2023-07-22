@@ -1,11 +1,13 @@
 import { TwitchUser } from "../types"
 import { Entity } from "redis-om"
+import TwitchUser from "../../models/TwitchUser"
 
 declare global {
     namespace Express {
         interface User {
             twitchToken?: string
             twitchUser?: TwitchUser
+            testUser?: TwitchUser
         }
     }
 }

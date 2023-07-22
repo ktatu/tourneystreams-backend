@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios"
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig"
 
+/*
 axios.interceptors.response.use(
     (res) => {
         return res
@@ -17,7 +18,7 @@ axios.interceptors.response.use(
 
         return Promise.reject(error)
     }
-)
+)*/
 
 // https://dev.twitch.tv/docs/api/reference/#get-followed-channels
 const getFollowed = async (accessToken: string, userId: string) => {
@@ -38,7 +39,6 @@ const getFollowed = async (accessToken: string, userId: string) => {
 
 // https://dev.twitch.tv/docs/authentication/refresh-tokens/
 const getRefreshedToken = async (refreshToken: string) => {
-    console.log("get refreshed")
     const res = await axios.post(
         "https://id.twitch.tv/oauth2/token",
         {
@@ -60,10 +60,12 @@ const getUserId = async (accessToken: string) => {
 
     const userId = res.data.data[0].id
 
-    if (typeof userId !== "string") {
-        return null
+    if (!userId || typeof userId !== "string") {
+        console.log("throwing error in get user id")
+        throw new Error("Failed to retrieve user id from twitch")
     }
 
+    console.log("user id ", userId)
     return userId
 }
 
