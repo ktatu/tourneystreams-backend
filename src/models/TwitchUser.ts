@@ -33,8 +33,7 @@ class TwitchUser {
     }
 
     public static GetTwitchUser = async (entityId: string) => {
-        const savedUser = await repository.fetch("123")
-        const test123 = savedUser[EntityId]
+        const savedUser = await repository.fetch(entityId)
 
         this.validateFetchedEntity(savedUser, getTwitchUserSchemaFields())
 
