@@ -31,7 +31,7 @@ const getFollowed = async (accessToken: string, userId: string) => {
     })
 
     if (!(res.data.data instanceof Array)) {
-        throw new Error("Unexpected result data format")
+        throw new Error("Unexpected response data format")
     }
 
     return res.data.data as Array<unknown>
@@ -39,6 +39,28 @@ const getFollowed = async (accessToken: string, userId: string) => {
 
 // https://dev.twitch.tv/docs/authentication/refresh-tokens/
 const getRefreshedToken = async (refreshToken: string) => {
+    /*
+    console.log("GET REFRESHED TOKEN")
+    try {
+        const res = await axios.post(
+            "https://id.twitch.tv/oauth2/token",
+            {
+                client_id: TWITCH_CLIENT_ID,
+                client_secret: TWITCH_CLIENT_SECRET,
+                grant_type: "refresh_token",
+                refresh_token: refreshToken,
+            },
+            { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+        )
+
+        console.log("res data ", res.data)
+
+        return { newAccessToken: res.data.access_token, newRefreshToken: res.data.refresh_token }
+    } catch (error) {
+        console.log("get refreshed token error ", error)
+    }
+    console.log("123")
+    return null*/
     const res = await axios.post(
         "https://id.twitch.tv/oauth2/token",
         {
@@ -50,9 +72,12 @@ const getRefreshedToken = async (refreshToken: string) => {
         { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
     )
 
+    console.log("res data ", res.data)
+
     return { newAccessToken: res.data.access_token, newRefreshToken: res.data.refresh_token }
 }
 
+// https://dev.twitch.tv/docs/api/reference/#get-users
 const getUserId = async (accessToken: string) => {
     const res = await axios.get("https://api.twitch.tv/helix/users", {
         headers: { Authorization: `Bearer ${accessToken}`, "Client-ID": TWITCH_CLIENT_ID },

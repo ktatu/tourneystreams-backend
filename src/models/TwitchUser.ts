@@ -16,8 +16,12 @@ const repository = new Repository(twitchUserSchema, redisClient)
 class TwitchUser {
     private constructor() {}
 
-    public static CreateTwitchUser = async (accessToken: string, refreshToken: string) => {
-        const userId = await getUserId(accessToken)
+    public static SaveTwitchUser = async (
+        accessToken: string,
+        refreshToken: string,
+        userId?: string
+    ) => {
+        userId = userId || (await getUserId(accessToken))
 
         const savedUser = await repository.save({
             accessToken,
@@ -50,8 +54,6 @@ class TwitchUser {
             throw new Error(`${missingKeyErrorString} entityId`)
         }
 
-        const test2 = fetchedEntity[EntityId]
-
         expectedFields.forEach((field) => {
             if (!(field in fetchedEntity)) {
                 console.error(`${missingKeyErrorString} ${field}`)
@@ -67,7 +69,7 @@ class TwitchUser {
             throw new Error("Saved user missing entity id")
         }
 
-        await repository.expire(entityId, 2629800)
+        await repository.expire(entityId, 2629800) // 1 month
     }
 }
 

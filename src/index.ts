@@ -1,6 +1,5 @@
-import "./services/OAuth2Strategy"
-import "./services/JSONWebTokenStrategy"
-
+import "./middlewares/OAuth2Strategy"
+import "./middlewares/JSONWebTokenStrategy"
 import express from "express"
 const app = express()
 

@@ -25,7 +25,7 @@ const OAuth2Strategy = passport.use(
             profile: Express.User,
             done: DoneCallback
         ) => {
-            const entityId = await TwitchUser.CreateTwitchUser(accessToken, refreshToken)
+            const entityId = await TwitchUser.SaveTwitchUser(accessToken, refreshToken)
 
             if (!entityId) {
                 return done("error")

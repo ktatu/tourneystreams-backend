@@ -4,10 +4,9 @@ import { CLIENT_URL } from "../envConfig"
 import { format as formatUrl } from "url"
 import axios, { AxiosError } from "axios"
 import parseFollowedStreams from "../utils/parseFollowedStreams"
-import jwt from "jsonwebtoken"
 import { getFollowed, getRefreshedToken } from "../external_requests/twitchRequests"
-import TwitchUserEntity from "../models/TwitchUserEntity"
-//import TwitchService from "../services/TwitchService"
+import TwitchUser from "../models/TwitchUser"
+import validateError from "../utils/validateError"
 
 const router = express.Router()
 
@@ -21,14 +20,16 @@ router.get(
             return res.status(500).end()
         }
 
-        const { accessToken, entityId, refreshToken, userId } = req.user.twitchUser
+        const { accessToken, refreshToken, userId } = req.user.twitchUser
 
         try {
             const twitchResData = await getFollowed(accessToken, userId)
             const followedStreams = parseFollowedStreams(twitchResData)
-            //console.log(twitchResData)
+
             return res.json({ streams: followedStreams })
-        } catch (error: unknown) {
+        } catch (err: unknown) {
+            const error = validateError(err)
+
             if (error instanceof AxiosError) {
                 if (error.response?.status === 401) {
                     try {
@@ -38,11 +39,8 @@ router.get(
 
                         const twitchResData = await getFollowed(newAccessToken, userId)
                         const followedStreams = parseFollowedStreams(twitchResData)
-                        await TwitchUserEntity.save(entityId, {
-                            ...req.user.twitchUser,
-                            accessToken: newAccessToken,
-                            refreshToken: newRefreshToken,
-                        })
+
+                        await TwitchUser.SaveTwitchUser(newAccessToken, newRefreshToken, userId)
 
                         return res.json({ streams: followedStreams })
                     } catch (error: unknown) {
@@ -82,15 +80,5 @@ router.get(
         return res.redirect(urlString)
     }
 )
-
-router.get("/errortest", () => {
-    console.log("error test endpoint")
-    throw new Error("Error test")
-})
-
-router.get("/ping", (req, res) => {
-    console.log("pong")
-    res.send("pong")
-})
 
 export default router
