@@ -2,11 +2,12 @@ import express from "express"
 import passport from "passport"
 import { CLIENT_URL } from "../envConfig"
 import { format as formatUrl } from "url"
-import axios, { AxiosError } from "axios"
+import { AxiosError } from "axios"
 import parseFollowedStreams from "../utils/parseFollowedStreams"
 import { getFollowed, getRefreshedToken } from "../external_requests/twitchRequests"
 import TwitchUser from "../models/TwitchUser"
 import validateError from "../utils/validateError"
+import createHttpError from "http-errors"
 
 const router = express.Router()
 
@@ -15,9 +16,9 @@ router.get(
     passport.authenticate("jwt", {
         session: false,
     }),
-    async (req, res) => {
+    async (req, res, next) => {
         if (!req.user?.twitchUser) {
-            return res.status(500).end()
+            return next(createHttpError(500, "Error test 123"))
         }
 
         const { accessToken, refreshToken, userId } = req.user.twitchUser
@@ -30,23 +31,21 @@ router.get(
         } catch (err: unknown) {
             const error = validateError(err)
 
-            if (error instanceof AxiosError) {
-                if (error.response?.status === 401) {
-                    try {
-                        const { newAccessToken, newRefreshToken } = await getRefreshedToken(
-                            refreshToken
-                        )
+            if (error instanceof AxiosError && error.response?.status === 401) {
+                try {
+                    const { newAccessToken, newRefreshToken } = await getRefreshedToken(
+                        refreshToken
+                    )
 
-                        const twitchResData = await getFollowed(newAccessToken, userId)
-                        const followedStreams = parseFollowedStreams(twitchResData)
+                    const twitchResData = await getFollowed(newAccessToken, userId)
+                    const followedStreams = parseFollowedStreams(twitchResData)
 
-                        await TwitchUser.SaveTwitchUser(newAccessToken, newRefreshToken, userId)
+                    await TwitchUser.SaveTwitchUser(newAccessToken, newRefreshToken, userId)
 
-                        return res.json({ streams: followedStreams })
-                    } catch (error: unknown) {
-                        console.log("failed to retrieve data with refreshed token")
-                        return res.status(500).end()
-                    }
+                    return res.json({ streams: followedStreams })
+                } catch (error: unknown) {
+                    console.log("failed to retrieve data with refreshed token")
+                    return res.status(500).end()
                 }
             }
             return res.status(500).end()

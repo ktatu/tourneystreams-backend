@@ -12,7 +12,7 @@ passport.use(
         },
         async (jwtPayload, done) => {
             try {
-                const twitchUser = await TwitchUser.GetTwitchUser(jwtPayload.entityId)
+                const twitchUser = await TwitchUser.GetTwitchUser(jwtPayload.userId)
                 const profile: Express.User = { twitchUser }
 
                 return done(null, profile)

@@ -25,13 +25,13 @@ const OAuth2Strategy = passport.use(
             profile: Express.User,
             done: DoneCallback
         ) => {
-            const entityId = await TwitchUser.SaveTwitchUser(accessToken, refreshToken)
+            const userId = await TwitchUser.SaveTwitchUser(accessToken, refreshToken)
 
-            if (!entityId) {
+            if (!userId) {
                 return done("error")
             }
 
-            const token = jwt.sign({ entityId }, JWT_SECRET)
+            const token = jwt.sign({ userId }, JWT_SECRET)
 
             profile.twitchToken = token
 

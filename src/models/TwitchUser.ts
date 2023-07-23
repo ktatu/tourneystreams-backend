@@ -23,21 +23,19 @@ class TwitchUser {
     ) => {
         userId = userId || (await getUserId(accessToken))
 
-        const savedUser = await repository.save({
+        await repository.save(userId, {
             accessToken,
             refreshToken,
             userId,
         })
 
-        const entityId = savedUser[EntityId]
+        this.setUserExpiration(userId)
 
-        this.setUserExpiration(entityId)
-
-        return entityId
+        return userId
     }
 
-    public static GetTwitchUser = async (entityId: string) => {
-        const savedUser = await repository.fetch(entityId)
+    public static GetTwitchUser = async (userId: string) => {
+        const savedUser = await repository.fetch(userId)
 
         this.validateFetchedEntity(savedUser, getTwitchUserSchemaFields())
 
@@ -50,10 +48,6 @@ class TwitchUser {
     ) => {
         const missingKeyErrorString = "Twitch user entity missing key: "
 
-        if (!fetchedEntity[EntityId]) {
-            throw new Error(`${missingKeyErrorString} entityId`)
-        }
-
         expectedFields.forEach((field) => {
             if (!(field in fetchedEntity)) {
                 console.error(`${missingKeyErrorString} ${field}`)
@@ -64,12 +58,12 @@ class TwitchUser {
         return fetchedEntity
     }
 
-    private static setUserExpiration = async (entityId: string | undefined) => {
-        if (!entityId) {
+    private static setUserExpiration = async (userId: string | undefined) => {
+        if (!userId) {
             throw new Error("Saved user missing entity id")
         }
 
-        await repository.expire(entityId, 2629800) // 1 month
+        await repository.expire(userId, 2629800) // 1 month
     }
 }
 
