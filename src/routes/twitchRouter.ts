@@ -13,12 +13,12 @@ const router = express.Router()
 
 router.get(
     "/",
-    passport.authenticate("jwt", {
+    passport.authenticate("twitchUser", {
         session: false,
     }),
     async (req, res, next) => {
         if (!req.user?.twitchUser) {
-            return next(createHttpError(500, "Error test 123"))
+            return next(createHttpError(500, "Unexpected error"))
         }
 
         const { accessToken, refreshToken, userId } = req.user.twitchUser
@@ -32,24 +32,29 @@ router.get(
             const error = validateError(err)
 
             if (error instanceof AxiosError && error.response?.status === 401) {
-                try {
-                    const { newAccessToken, newRefreshToken } = await getRefreshedToken(
-                        refreshToken
-                    )
+                const { newAccessToken, newRefreshToken } = await getRefreshedToken(refreshToken)
 
-                    const twitchResData = await getFollowed(newAccessToken, userId)
-                    const followedStreams = parseFollowedStreams(twitchResData)
+                const twitchResData = await getFollowed(newAccessToken, userId)
+                const followedStreams = parseFollowedStreams(twitchResData)
 
-                    await TwitchUser.SaveTwitchUser(newAccessToken, newRefreshToken, userId)
+                // TODO: ERROR HANDLING IN ERRORHANDLER
+                await TwitchUser.Save(newAccessToken, newRefreshToken, userId)
 
-                    return res.json({ streams: followedStreams })
-                } catch (error: unknown) {
-                    console.log("failed to retrieve data with refreshed token")
-                    return res.status(500).end()
-                }
+                return res.json({ streams: followedStreams })
             }
             return res.status(500).end()
         }
+    }
+)
+
+router.get(
+    "/disconnect",
+    passport.authenticate("twitchUserId", { session: false }),
+    async (req, res) => {
+        //console.log("req user ", req.user?.twitchUser)
+        //console.log("token ", req.user?.twitchToken)
+
+        return res.status(200).send("ok")
     }
 )
 
@@ -66,9 +71,9 @@ router.get("/auth", (req, res, next) => {
 router.get(
     "/redirect",
     passport.authenticate("twitch", { failureRedirect: CLIENT_URL, session: false }),
-    (req, res) => {
-        if (!req.user) {
-            return res.status(500)
+    (req, res, next) => {
+        if (!req.user?.twitchToken) {
+            return next(createHttpError(500, "Unexpected error"))
         }
 
         const { state } = req.query

@@ -1,13 +1,15 @@
-import { TwitchUser } from "../types"
-import { Entity } from "redis-om"
 import TwitchUser from "../../models/TwitchUser"
+
+/* 
+Anything that gets passed from passport middleware to request handlers
+needs to be added to User interface
+*/
 
 declare global {
     namespace Express {
         interface User {
-            twitchToken?: string
             twitchUser?: TwitchUser
-            testUser?: TwitchUser
+            twitchToken?: string
         }
     }
 }

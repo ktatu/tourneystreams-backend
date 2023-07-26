@@ -1,9 +1,8 @@
 import { ErrorRequestHandler } from "express"
+import prettyError from "../utils/prettyError"
 
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
-    console.log("-----------------------------")
-    console.log("-----------------------------")
-    console.log("error in error handler ", error)
+    console.log(prettyError.render(error))
     next(error)
 }
 

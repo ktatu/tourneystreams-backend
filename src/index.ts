@@ -1,22 +1,20 @@
 import "./middlewares/OAuth2Strategy"
 import "./middlewares/JSONWebTokenStrategy"
+import errorHandler from "./middlewares/errorHandler"
+import unknownEndpointHandler from "./middlewares/unknownEndpointHandler"
 import express from "express"
 const app = express()
 
 import "express-async-errors"
 import cors from "cors"
 import twitchRouter from "./routes/twitchRouter"
-import errorHandler from "./errorHandler"
 
 app.use(cors())
 app.use(express.json())
 
 app.use("/api/twitch", twitchRouter)
 
-app.use((_req, res, _next) => {
-    res.status(404).send({ message: "Not found" })
-})
-
+app.use(unknownEndpointHandler)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001

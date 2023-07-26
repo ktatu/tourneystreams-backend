@@ -1,13 +1,9 @@
 import passport, { DoneCallback } from "passport"
 import { Strategy } from "passport-oauth2"
-import jwt from "jsonwebtoken"
-import {
-    TWITCH_CLIENT_ID,
-    TWITCH_CLIENT_SECRET,
-    TWITCH_CALLBACK_URL,
-    JWT_SECRET,
-} from "../envConfig"
+import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, TWITCH_CALLBACK_URL } from "../envConfig"
 import TwitchUser from "../models/TwitchUser"
+
+// TODO: PROFILE SIMILARLY TO TWITCH GITHUB EXAMPLE
 
 const OAuth2Strategy = passport.use(
     "twitch",
@@ -22,20 +18,19 @@ const OAuth2Strategy = passport.use(
         async (
             accessToken: string,
             refreshToken: string,
-            profile: Express.User,
+            _profile: Express.User,
             done: DoneCallback
         ) => {
-            const userId = await TwitchUser.SaveTwitchUser(accessToken, refreshToken)
+            const userId = await TwitchUser.Save(accessToken, refreshToken)
 
             if (!userId) {
                 return done("error")
             }
 
-            const token = jwt.sign({ userId }, JWT_SECRET)
+            const token = TwitchUser.CreateToken(userId)
 
-            profile.twitchToken = token
-
-            return done(null, profile)
+            const twitchUserProfile: Express.User = { twitchToken: userId }
+            return done(null, twitchUserProfile)
         }
     )
 )

@@ -1,7 +1,10 @@
-import { EntityId, Repository, Schema, Entity } from "redis-om"
+import { Repository, Schema, Entity } from "redis-om"
 import redisClient from "../services/redisClient"
 import { getUserId } from "../external_requests/twitchRequests"
-import parseTwitchUser from "../utils/parseTwitchUser"
+import { parseString } from "../utils/parseHelpers"
+import validateError from "../utils/validateError"
+import { JWT_SECRET } from "../envConfig"
+import jwt from "jsonwebtoken"
 
 const twitchUserSchema = new Schema("twitchUser", {
     accessToken: { type: "string" },
@@ -14,13 +17,38 @@ const getTwitchUserSchemaFields = () => twitchUserSchema.fields.map((field) => f
 const repository = new Repository(twitchUserSchema, redisClient)
 
 class TwitchUser {
-    private constructor() {}
+    accessToken: string
+    refreshToken: string
+    userId: string
 
-    public static SaveTwitchUser = async (
-        accessToken: string,
-        refreshToken: string,
-        userId?: string
+    private constructor(accessToken: string, refreshToken: string, userId: string) {
+        this.accessToken = accessToken
+        this.refreshToken = refreshToken
+        this.userId = userId
+    }
+
+    public static Get = async (
+        userId: string,
+        callback: (err: Error | null, twitchUser: TwitchUser | null) => void
     ) => {
+        try {
+            const entity = await repository.fetch(userId)
+
+            if (this.incompleteOrMissingEntity(entity)) {
+                callback(null, null)
+            }
+
+            const twitchUser = this.parseTwitchUserEntity(entity)
+
+            callback(null, twitchUser)
+        } catch (err) {
+            const error = validateError(err)
+
+            callback(error, null)
+        }
+    }
+
+    public static Save = async (accessToken: string, refreshToken: string, userId?: string) => {
         userId = userId || (await getUserId(accessToken))
 
         await repository.save(userId, {
@@ -29,41 +57,43 @@ class TwitchUser {
             userId,
         })
 
-        this.setUserExpiration(userId)
+        this.setEntityExpiration(userId)
 
         return userId
     }
 
-    public static GetTwitchUser = async (userId: string) => {
-        const savedUser = await repository.fetch(userId)
-
-        this.validateFetchedEntity(savedUser, getTwitchUserSchemaFields())
-
-        return parseTwitchUser(savedUser)
+    public static Remove = async (userId: string) => {
+        await repository.remove(userId)
     }
 
-    private static validateFetchedEntity = (
-        fetchedEntity: Entity,
-        expectedFields: Array<string>
-    ) => {
-        const missingKeyErrorString = "Twitch user entity missing key: "
+    public static CreateToken = (userId: string) => {
+        return jwt.sign({ userId }, JWT_SECRET)
+    }
 
-        expectedFields.forEach((field) => {
-            if (!(field in fetchedEntity)) {
-                console.error(`${missingKeyErrorString} ${field}`)
-                throw new Error("Missing or incomplete entity in database")
+    private static incompleteOrMissingEntity = (fetchedEntity: Entity) => {
+        const expectedFields = getTwitchUserSchemaFields()
+
+        for (const schemaField of expectedFields) {
+            if (!fetchedEntity[schemaField]) {
+                return true
             }
-        })
-
-        return fetchedEntity
-    }
-
-    private static setUserExpiration = async (userId: string | undefined) => {
-        if (!userId) {
-            throw new Error("Saved user missing entity id")
         }
 
-        await repository.expire(userId, 2629800) // 1 month
+        return false
+    }
+
+    private static setEntityExpiration = (userId: string) => {
+        repository.expire(userId, 2629800) // 1 month
+    }
+
+    private static parseTwitchUserEntity = (entity: Entity) => {
+        const twitchUser = new TwitchUser(
+            parseString(entity.accessToken, "accessToken"),
+            parseString(entity.refreshToken, "refreshToken"),
+            parseString(entity.userId, "userId")
+        )
+
+        return twitchUser
     }
 }
 
