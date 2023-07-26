@@ -29,7 +29,7 @@ const OAuth2Strategy = passport.use(
 
             const token = TwitchUser.CreateToken(userId)
 
-            const twitchUserProfile: Express.User = { twitchToken: userId }
+            const twitchUserProfile: Express.User = { twitchToken: token }
             return done(null, twitchUserProfile)
         }
     )
