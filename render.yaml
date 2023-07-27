@@ -7,4 +7,3 @@ services:
       buildCommand: npm install && npm run build
       startCommand: npm run serve
       staticPublishPath: ./build
-      rootDir: src
