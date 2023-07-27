@@ -4,6 +4,7 @@ services:
       runtime: static
       repo: https://github.com/ktatu/apextourneystreams-frontend.git
       branch: main
-      buildCommand: npm run build
+      buildCommand: npm install && npm run build
+      startCommand: npm run serve
       staticPublishPath: ./build
       rootDir: src
