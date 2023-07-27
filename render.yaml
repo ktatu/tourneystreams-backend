@@ -8,3 +8,7 @@ services:
       startCommand: npm run serve
       staticPublishPath: ./build
       autoDeploy: false
+
+    - type: redis
+      name: private-redis
+      ipAllowList: []
