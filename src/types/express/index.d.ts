@@ -9,6 +9,7 @@ declare global {
     namespace Express {
         interface User {
             twitchUser?: TwitchUser
+            twitchUserId?: string
             twitchToken?: string
         }
     }

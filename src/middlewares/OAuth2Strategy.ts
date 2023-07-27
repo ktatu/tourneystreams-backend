@@ -6,7 +6,7 @@ import TwitchUser from "../models/TwitchUser"
 // TODO: PROFILE SIMILARLY TO TWITCH GITHUB EXAMPLE
 
 const OAuth2Strategy = passport.use(
-    "twitch",
+    "twitch-auth",
     new Strategy(
         {
             authorizationURL: "https://id.twitch.tv/oauth2/authorize",

@@ -9,11 +9,11 @@ const strategyOptions: StrategyOptions = {
 }
 
 passport.use(
-    "twitchUser",
+    "twitch-user",
     new Strategy(strategyOptions, async (payload, done) => {
         await TwitchUser.Get(payload.userId, (error, twitchUser) => {
             if (error) {
-                return done(error, false)
+                return done(error)
             }
 
             if (twitchUser) {
@@ -25,16 +25,5 @@ passport.use(
         })
     })
 )
-
-/*
-passport.use(
-    "twitchUserId",
-    new Strategy(strategyOptions, (payload, done) => {
-        const profile: Express.User = { twitchUserProfile: payload.userId }
-
-        return done(null, profile)
-    })
-)
-*/
 
 export default {}

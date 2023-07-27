@@ -1,4 +1,4 @@
-import express from "express"
+import express, { Request } from "express"
 import passport from "passport"
 import { CLIENT_URL } from "../envConfig"
 import { format as formatUrl } from "url"
@@ -13,7 +13,7 @@ const router = express.Router()
 
 router.get(
     "/",
-    passport.authenticate("twitchUser", {
+    passport.authenticate("twitch-user", {
         session: false,
     }),
     async (req, res, next) => {
@@ -37,7 +37,6 @@ router.get(
                 const twitchResData = await getFollowed(newAccessToken, userId)
                 const followedStreams = parseFollowedStreams(twitchResData)
 
-                // TODO: ERROR HANDLING IN ERRORHANDLER
                 await TwitchUser.Save(newAccessToken, newRefreshToken, userId)
 
                 return res.json({ streams: followedStreams })
@@ -47,19 +46,8 @@ router.get(
     }
 )
 
-router.get(
-    "/disconnect",
-    passport.authenticate("twitchUserId", { session: false }),
-    async (req, res) => {
-        //console.log("req user ", req.user?.twitchUser)
-        //console.log("token ", req.user?.twitchToken)
-
-        return res.status(200).send("ok")
-    }
-)
-
 router.get("/auth", (req, res, next) => {
-    const authenticator = passport.authenticate("twitch", {
+    const authenticator = passport.authenticate("twitch-auth", {
         scope: "user:read:follows",
         session: false,
         state: JSON.stringify(req.query),
@@ -70,7 +58,7 @@ router.get("/auth", (req, res, next) => {
 
 router.get(
     "/redirect",
-    passport.authenticate("twitch", { failureRedirect: CLIENT_URL, session: false }),
+    passport.authenticate("twitch-auth", { failureRedirect: CLIENT_URL, session: false }),
     (req, res, next) => {
         if (!req.user?.twitchToken) {
             return next(createHttpError(500, "Unexpected error"))
