@@ -1,9 +1,10 @@
 services:
     - type: web
-      name: frontend
+      name: Tourneystreams
       runtime: static
       repo: https://github.com/ktatu/apextourneystreams-frontend.git
       branch: main
       buildCommand: npm install && npm run build
       startCommand: npm run serve
       staticPublishPath: ./build
+      autoDeploy: false
