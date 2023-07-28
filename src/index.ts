@@ -14,6 +14,10 @@ app.use(express.json())
 
 app.use("/api/twitch", twitchRouter)
 
+app.get("/api/healthcheck", (req, res) => {
+    return res.status(200).send("ok")
+})
+
 app.use(unknownEndpointHandler)
 app.use(errorHandler)
 
