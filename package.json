@@ -7,7 +7,8 @@
         "test": "npx jest",
         "start": "node index.ts",
         "tsc": "tsc",
-        "dev": "ts-node-dev --files src/index.ts"
+        "start:dev": "ts-node-dev --files src/index.ts",
+        "start:prod": "node build/index.js"
     },
     "author": "ktatu",
     "license": "ISC",
