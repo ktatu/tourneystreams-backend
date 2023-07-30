@@ -1,6 +1,7 @@
 import { createClient } from "redis"
+import { REDIS_URL } from "../envConfig"
 
-const redisClient = createClient()
+let redisClient = createClient({ url: REDIS_URL })
 
 redisClient.on("error", (error) => console.error("redis client error ", error))
 
