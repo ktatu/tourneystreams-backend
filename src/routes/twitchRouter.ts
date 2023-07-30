@@ -1,4 +1,4 @@
-import express, { Request } from "express"
+import express from "express"
 import passport from "passport"
 import { CLIENT_URL } from "../envConfig"
 import { format as formatUrl } from "url"
