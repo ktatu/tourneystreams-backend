@@ -8,6 +8,10 @@ export const JWT_SECRET = process.env.JWT_SECRET as string
 export const REDIS_URL = process.env.REDIS_URL
 export const NODE_ENV = process.env.NODE_ENV
 
+export const REDIS_PASSWORD = process.env.REDIS_PASSWORD as string
+export const REDIS_PORT = parseInt(process.env.REDIS_PORT as string)
+export const REDIS_HOST = process.env.REDIS_HOST as string
+
 export const CLIENT_URL =
     process.env.NODE_ENV === "production"
         ? (process.env.CLIENT_URL_PROD as string)

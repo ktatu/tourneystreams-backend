@@ -1,14 +1,25 @@
 import { createClient } from "redis"
-import { REDIS_URL } from "../envConfig"
+import { NODE_ENV, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT } from "../envConfig"
 
-let redisClient = createClient({ url: REDIS_URL })
+const redisClient =
+    NODE_ENV === "production"
+        ? createClient({
+              password: REDIS_PASSWORD,
+              socket: {
+                  host: REDIS_HOST,
+                  port: REDIS_PORT,
+              },
+          })
+        : createClient()
 
-redisClient.on("error", (error) => console.error("redis client error ", error))
-
-const redisConnect = async () => {
-    await redisClient.connect()
-}
-
-redisConnect()
+redisClient
+    .connect()
+    .then(() => {
+        console.log("Connected to redis")
+    })
+    .catch((error: unknown) => {
+        console.error("Error connecting redis: ", error)
+        process.exit(1)
+    })
 
 export default redisClient
