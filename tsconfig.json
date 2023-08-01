@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "ES2020",
-        "outDir": "./build/",
+        "outDir": "./backend_build/",
         "module": "commonjs",
         "strict": true,
         "noImplicitReturns": true,

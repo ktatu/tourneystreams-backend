@@ -1,8 +1,8 @@
-.env
 build/
+backend_build/
 node_modules/
 .history/
 *.rest
 requests/
 tests/
-backend_build
+.env

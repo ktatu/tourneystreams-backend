@@ -53,7 +53,6 @@ router.get("/auth", (req, res, next) => {
         state: JSON.stringify(req.query),
     })
 
-    console.log("22222222222222")
     authenticator(req, res, next)
 })
 
@@ -68,9 +67,6 @@ router.get(
         const { state } = req.query
         const urlString = formatUrl({ pathname: CLIENT_URL, query: JSON.parse(state as string) })
 
-        console.log("1111111111111")
-        console.log("url string ", urlString)
-        console.log("req user twitch token ", req.user.twitchToken)
         res.cookie("twitch-token", req.user.twitchToken)
 
         return res.redirect(urlString)
