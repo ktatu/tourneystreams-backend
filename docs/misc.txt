@@ -1,1 +1,1 @@
-If you plan to deploy the application somewhere, then create a new application in Twitch developer console
+If you plan to deploy the application somewhere, then create a new application in Twitch developer console.
