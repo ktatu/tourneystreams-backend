@@ -6,7 +6,9 @@ const validateError = (err: unknown) => {
     let stringified = "[Unable to stringify the thrown value]"
     try {
         stringified = JSON.stringify(err)
-    } catch {}
+    } catch {
+        // eslint-ignore-next-line
+    }
 
     const error = new Error(`Caught error not instance of Error, stringified: ${stringified}`)
     return error

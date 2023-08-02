@@ -1,0 +1,27 @@
+{
+    "env": {
+        "node": true
+    },
+    "ignorePatterns": ["build/", "backend_build/", "tests/"],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "root": true,
+    "rules": {
+        "eqeqeq": "error",
+        "no-await-in-loop": "error",
+        "no-duplicate-imports": ["error", { "includeExports": true }],
+        "no-new-native-nonconstructor": "error",
+        "curly": "error",
+        "default-case": "error",
+        "dot-notation": "error",
+        "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
+        "grouped-accessor-pairs": ["error", "getBeforeSet"],
+        "no-lonely-if": "error",
+        "prefer-const": "error",
+        "arrow-spacing": "error",
+        "block-spacing": "error",
+        "quotes": ["error", "double"],
+        "semi": ["error", "never"]
+    }
+}

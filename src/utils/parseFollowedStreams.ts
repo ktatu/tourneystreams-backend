@@ -2,7 +2,7 @@ import { FollowedStream } from "../types/types"
 import { parseString, parseNumber } from "./parseHelpers"
 
 const parseFollowedStreams = (rawDataArray: Array<unknown>) => {
-    let parsedArray: Array<FollowedStream> = []
+    const parsedArray: Array<FollowedStream> = []
 
     rawDataArray.forEach((dataObj) => {
         try {

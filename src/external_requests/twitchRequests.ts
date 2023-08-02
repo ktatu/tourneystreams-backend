@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig"
 
 /*
