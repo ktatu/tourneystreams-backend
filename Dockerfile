@@ -9,8 +9,8 @@ COPY . .
 RUN npm ci && \
     npm run tsc
 
-RUN apk update && \
-    apk add git && \
+RUN apk update -y && \
+    apk add git -y && \
     git clone https://github.com/ktatu/apextourneystreams-frontend.git && \
     cd apextourneystreams-frontend && \
     npm ci && \
