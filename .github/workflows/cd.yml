@@ -9,6 +9,16 @@ on:
   workflow_dispatch:
 
 jobs:
+
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Lint
+        run: npm run lint
+
   publish_image:
     runs-on: ubuntu-latest
     steps:
