@@ -14,7 +14,7 @@ EXPOSE 10000
 
 WORKDIR /usr/src/app
 
-COPY --from=ktatu/tourneystreams-frontend-build:latest /usr/src/app/build /usr/src/app/build
+COPY --from=ktatu/tourneystreams-frontend-build:main /usr/src/app/build /usr/src/app/build
 
 COPY --from=typescript-compilation /usr/src/app/backend_build /usr/src/app/backend_build
 
