@@ -4,6 +4,9 @@ import { AxiosError } from "axios"
 import createHttpError from "http-errors"
 import TwitchUser from "../models/TwitchUser"
 import validateError from "../utils/validateError"
+import passport from "passport"
+import { format as formatUrl } from "url"
+import { CLIENT_URL } from "../envConfig"
 
 class TwitchController {
     static getFollowedStreams: RequestHandler = async (req, res, next) => {
@@ -36,6 +39,27 @@ class TwitchController {
             }
             return res.status(500).end()
         }
+    }
+
+    static authenticate: RequestHandler = async (req, res, next) => {
+        passport.authenticate("twitch-auth", {
+            scope: "user:read:follows",
+            session: false,
+            state: JSON.stringify(req.query),
+        })(req, res, next)
+    }
+
+    static authRedirect: RequestHandler = async (req, res, next) => {
+        if (!req.user?.twitchToken) {
+            return next(createHttpError(500, "Unexpected error"))
+        }
+
+        const { state } = req.query
+        const urlString = formatUrl({ pathname: CLIENT_URL, query: JSON.parse(state as string) })
+
+        res.cookie("twitch-token", req.user.twitchToken)
+
+        return res.redirect(urlString)
     }
 }
 
