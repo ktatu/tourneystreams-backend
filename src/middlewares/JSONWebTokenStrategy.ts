@@ -17,7 +17,7 @@ passport.use(
             }
 
             if (twitchUser) {
-                const profile: Express.User = { twitchUser: twitchUser }
+                const profile: Express.User = { twitchUser }
                 return done(null, profile)
             }
 

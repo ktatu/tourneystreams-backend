@@ -3,8 +3,6 @@ import { Strategy } from "passport-oauth2"
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, TWITCH_CALLBACK_URL } from "../envConfig"
 import TwitchUser from "../models/TwitchUser"
 
-// TODO: PROFILE SIMILARLY TO TWITCH GITHUB EXAMPLE
-
 const OAuth2Strategy = passport.use(
     "twitch-auth",
     new Strategy(

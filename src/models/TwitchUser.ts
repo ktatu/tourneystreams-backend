@@ -1,6 +1,6 @@
 import { Repository, Schema, Entity } from "redis-om"
 import redisClient from "../services/redisClient"
-import { getUserId } from "../external_requests/twitchRequests"
+import { getUserId } from "../external_apis/twitchRequests"
 import { parseString } from "../utils/parseHelpers"
 import validateError from "../utils/validateError"
 import { JWT_SECRET } from "../envConfig"
