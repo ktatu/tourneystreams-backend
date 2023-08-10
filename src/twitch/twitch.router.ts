@@ -1,6 +1,6 @@
 import express from "express"
 import passport from "passport"
-import TwitchController from "../controllers/TwitchController"
+import TwitchController from "./twitch.controller"
 
 const router = express.Router()
 

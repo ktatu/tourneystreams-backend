@@ -1,7 +1,7 @@
 import passport, { DoneCallback } from "passport"
 import { Strategy } from "passport-oauth2"
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, TWITCH_CALLBACK_URL } from "../envConfig"
-import TwitchUser from "../models/TwitchUser"
+import TwitchUser from "../twitch/twitch.user"
 
 const OAuth2Strategy = passport.use(
     "twitch-auth",

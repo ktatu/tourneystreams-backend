@@ -1,4 +1,4 @@
-import TwitchUser from "../../models/TwitchUser"
+import TwitchUser from "../../twitch/twitch.user"
 
 /* 
 Anything that gets passed from passport middleware to request handlers

@@ -1,6 +1,6 @@
 import { Repository, Schema, Entity } from "redis-om"
 import redisClient from "../services/redisClient"
-import { getUserId } from "../external_apis/twitchRequests"
+import TwitchApi from "./twitch.api"
 import { parseString } from "../utils/parseHelpers"
 import validateError from "../utils/validateError"
 import { JWT_SECRET } from "../envConfig"
@@ -49,7 +49,7 @@ class TwitchUser {
     }
 
     public static Save = async (accessToken: string, refreshToken: string, userId?: string) => {
-        userId = userId || (await getUserId(accessToken))
+        userId = userId || (await TwitchApi.getUserId(accessToken))
 
         await repository.save(userId, {
             accessToken,

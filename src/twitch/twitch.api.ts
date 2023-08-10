@@ -37,6 +37,21 @@ class TwitchApi {
 
         return { newAccessToken: res.data.access_token, newRefreshToken: res.data.refresh_token }
     }
+
+    // https://dev.twitch.tv/docs/api/reference/#get-users
+    static async getUserId(accessToken: string) {
+        const res = await axios.get("https://api.twitch.tv/helix/users", {
+            headers: { Authorization: `Bearer ${accessToken}`, "Client-ID": TWITCH_CLIENT_ID },
+        })
+
+        const userId = res.data.data[0].id
+
+        if (!userId || typeof userId !== "string") {
+            throw new Error("Failed to retrieve user id from twitch")
+        }
+
+        return userId
+    }
 }
 
 export default TwitchApi

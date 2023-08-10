@@ -7,7 +7,7 @@ const app = express()
 
 import "express-async-errors"
 import cors from "cors"
-import twitchRouter from "./routes/twitchRouter"
+import twitchRouter from "./twitch/twitch.router"
 
 app.use(cors())
 app.use(express.json())
