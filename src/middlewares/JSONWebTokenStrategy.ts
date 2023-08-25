@@ -1,7 +1,7 @@
 import passport from "passport"
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt"
-import { JWT_SECRET } from "../envConfig"
-import TwitchUser from "../twitch/twitch.user"
+import { JWT_SECRET } from "../envConfig.js"
+import TwitchUser from "../twitch/twitch.user.js"
 
 const strategyOptions: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

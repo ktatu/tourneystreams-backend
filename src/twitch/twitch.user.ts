@@ -1,9 +1,9 @@
 import { Repository, Schema, Entity } from "redis-om"
-import redisClient from "../services/redisClient"
-import TwitchApi from "./twitch.api"
-import { parseString } from "../utils/parseHelpers"
-import validateError from "../utils/validateError"
-import { JWT_SECRET } from "../envConfig"
+import redisClient from "../services/redisClient.js"
+import TwitchApi from "./twitch.api.js"
+import { parseString } from "../utils/parseHelpers.js"
+import validateError from "../utils/validateError.js"
+import { JWT_SECRET } from "../envConfig.js"
 import jwt from "jsonwebtoken"
 
 const twitchUserSchema = new Schema("twitchUser", {

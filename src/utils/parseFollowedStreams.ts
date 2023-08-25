@@ -1,5 +1,5 @@
-import { FollowedStream } from "../types/types"
-import { parseString, parseNumber } from "./parseHelpers"
+import { FollowedStream } from "../types/types.js"
+import { parseString, parseNumber } from "./parseHelpers.js"
 
 const parseFollowedStreams = (rawDataArray: Array<unknown>) => {
     const parsedArray: Array<FollowedStream> = []

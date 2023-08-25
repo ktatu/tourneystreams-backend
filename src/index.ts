@@ -1,13 +1,15 @@
-import "./middlewares/OAuth2Strategy"
-import "./middlewares/JSONWebTokenStrategy"
-import errorHandler from "./middlewares/errorHandler"
-import unknownEndpointHandler from "./middlewares/unknownEndpointHandler"
+import errorHandler from "./middlewares/errorHandler.js"
+import unknownEndpointHandler from "./middlewares/unknownEndpointHandler.js"
 import express from "express"
+
+import "./middlewares/OAuth2Strategy.js"
+import "./middlewares/JSONWebTokenStrategy.js"
+
 const app = express()
 
 import "express-async-errors"
 import cors from "cors"
-import twitchRouter from "./twitch/twitch.router"
+import twitchRouter from "./twitch/twitch.router.js"
 
 app.use(cors())
 app.use(express.json())

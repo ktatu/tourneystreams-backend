@@ -1,6 +1,6 @@
 import axios from "axios"
-import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig"
-import parseFollowedStreams from "../utils/parseFollowedStreams"
+import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig.js"
+import parseFollowedStreams from "../utils/parseFollowedStreams.js"
 
 class TwitchApi {
     // https://dev.twitch.tv/docs/api/reference/#get-followed-channels

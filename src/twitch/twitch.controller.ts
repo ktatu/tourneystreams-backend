@@ -1,12 +1,12 @@
 import { RequestHandler } from "express"
-import TwitchApi from "./twitch.api"
+import TwitchApi from "./twitch.api.js"
 import { AxiosError } from "axios"
 import createHttpError from "http-errors"
-import TwitchUser from "./twitch.user"
-import validateError from "../utils/validateError"
+import TwitchUser from "./twitch.user.js"
+import validateError from "../utils/validateError.js"
 import passport from "passport"
 import { format as formatUrl } from "url"
-import { CLIENT_URL } from "../envConfig"
+import { CLIENT_URL } from "../envConfig.js"
 
 class TwitchController {
     static getFollowedStreams: RequestHandler = async (req, res, next) => {
