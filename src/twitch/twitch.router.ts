@@ -12,6 +12,10 @@ router.get(
 
 router.get("/auth", TwitchController.authenticate)
 
-router.get("/redirect", passport.authenticate("twitch-auth", { session: false }))
+router.get(
+    "/redirect",
+    passport.authenticate("twitch-auth", { session: false }),
+    TwitchController.authRedirect
+)
 
 export default router
