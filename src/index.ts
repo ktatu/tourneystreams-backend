@@ -1,14 +1,14 @@
+import express from "express"
 import errorHandler from "./middlewares/errorHandler.js"
 import unknownEndpointHandler from "./middlewares/unknownEndpointHandler.js"
-import express from "express"
 
-import "./middlewares/OAuth2Strategy.js"
 import "./middlewares/JSONWebTokenStrategy.js"
+import "./middlewares/OAuth2Strategy.js"
 
 const app = express()
 
-import "express-async-errors"
 import cors from "cors"
+import "express-async-errors"
 import twitchRouter from "./twitch/twitch.router.js"
 
 app.use(cors())

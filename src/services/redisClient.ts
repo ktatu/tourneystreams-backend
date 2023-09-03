@@ -1,5 +1,5 @@
 import { createClient } from "redis"
-import { NODE_ENV, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT } from "../envConfig.js"
+import { NODE_ENV, REDIS_HOST, REDIS_PASSWORD, REDIS_PORT } from "../envConfig.js"
 
 const redisClient =
     NODE_ENV === "production"
