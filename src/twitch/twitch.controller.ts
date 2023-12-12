@@ -28,7 +28,6 @@ class TwitchController {
             const error = validateError(err)
 
             if (error instanceof AxiosError && error.response?.status === 401) {
-                console.log("need new twitch token")
                 const { newAccessToken, newRefreshToken } = await TwitchApi.getRefreshedToken(
                     refreshToken
                 )
