@@ -33,7 +33,7 @@ class TwitchController {
                 )
                 const followedStreams = await TwitchApi.getFollowedStreams(newAccessToken, userId)
 
-                await TwitchUser.Save(newAccessToken, newRefreshToken, userId)
+                await TwitchUser.save(newAccessToken, newRefreshToken, userId)
 
                 return res.json({ streams: followedStreams })
             }

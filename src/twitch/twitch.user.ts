@@ -27,7 +27,7 @@ class TwitchUser {
         this.userId = userId
     }
 
-    public static Get = async (
+    public static get = async (
         userId: string,
         callback: (err: Error | null, twitchUser: TwitchUser | null) => void
     ) => {
@@ -48,7 +48,7 @@ class TwitchUser {
         }
     }
 
-    public static Save = async (accessToken: string, refreshToken: string, userId?: string) => {
+    public static save = async (accessToken: string, refreshToken: string, userId?: string) => {
         userId = userId || (await TwitchApi.getUserId(accessToken))
 
         await repository.save(userId, {
@@ -62,11 +62,11 @@ class TwitchUser {
         return userId
     }
 
-    public static Remove = async (userId: string) => {
+    public static remove = async (userId: string) => {
         await repository.remove(userId)
     }
 
-    public static CreateToken = (userId: string) => {
+    public static createToken = (userId: string) => {
         return jwt.sign({ userId }, JWT_SECRET)
     }
 

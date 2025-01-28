@@ -11,7 +11,7 @@ const strategyOptions: StrategyOptions = {
 passport.use(
     "twitch-user",
     new Strategy(strategyOptions, async (payload, done) => {
-        await TwitchUser.Get(payload.userId, (error, twitchUser) => {
+        await TwitchUser.get(payload.userId, (error, twitchUser) => {
             if (error) {
                 return done(error)
             }
