@@ -15,9 +15,9 @@ import twitchRouter from "./twitch/twitch.router.js"
 app.use(cors())
 app.use(express.json())
 
-app.use("/api/twitch", twitchRouter)
+app.use("/twitch", twitchRouter)
 
-app.get("/api/healthcheck", (req, res) => {
+app.get("/healthcheck", (req, res) => {
     return res.status(200).send("ok")
 })
 
