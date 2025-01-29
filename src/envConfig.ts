@@ -10,7 +10,7 @@ export const NODE_ENV = process.env.NODE_ENV
 export const REDIS_URL = process.env.REDIS_URL as string
 
 export const CLIENT_URL =
-    process.env.NODE_ENV === "production"
+    process.env.ENV === "production"
         ? (process.env.CLIENT_URL_PROD as string)
         : (process.env.CLIENT_URL_DEV as string)
 
