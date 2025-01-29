@@ -1,6 +1,7 @@
 import express from "express"
 import errorHandler from "./middlewares/errorHandler.js"
 import unknownEndpointHandler from "./middlewares/unknownEndpointHandler.js"
+import redis from "./redis.js"
 
 import "./middlewares/JSONWebTokenStrategy.js"
 import "./middlewares/OAuth2Strategy.js"
@@ -27,6 +28,12 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log("server running on port ", PORT)
+    try {
+        await redis.connect()
+    } catch (error) {
+        console.error("Error connecting to redis")
+        console.error(error)
+    }
 })

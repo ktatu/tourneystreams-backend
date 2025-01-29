@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken"
 import { Entity, Repository, Schema } from "redis-om"
 import { JWT_SECRET } from "../envConfig.js"
-import redisClient from "../services/redisClient.js"
+import redis from "../redis.js"
 import { parseString } from "../utils/parseHelpers.js"
 import validateError from "../utils/validateError.js"
 import TwitchApi from "./twitch.api.js"
@@ -14,7 +14,7 @@ const twitchUserSchema = new Schema("twitchUser", {
 
 const getTwitchUserSchemaFields = () => twitchUserSchema.fields.map((field) => field.name)
 
-const repository = new Repository(twitchUserSchema, redisClient)
+const repository = new Repository(twitchUserSchema, redis)
 
 class TwitchUser {
     accessToken: string
