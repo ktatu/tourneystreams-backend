@@ -11,6 +11,7 @@ import TwitchUser from "./twitch.user.js"
 class TwitchController {
     static getFollowedStreams: RequestHandler = async (req, res, next) => {
         if (!req.user?.twitchUser) {
+            console.log("no twitch user")
             return next(createHttpError(500, "Unexpected error"))
         }
 
@@ -28,9 +29,8 @@ class TwitchController {
             const error = validateError(err)
 
             if (error instanceof AxiosError && error.response?.status === 401) {
-                const { newAccessToken, newRefreshToken } = await TwitchApi.getRefreshedToken(
-                    refreshToken
-                )
+                const { newAccessToken, newRefreshToken } =
+                    await TwitchApi.getRefreshedToken(refreshToken)
                 const followedStreams = await TwitchApi.getFollowedStreams(newAccessToken, userId)
 
                 await TwitchUser.save(newAccessToken, newRefreshToken, userId)

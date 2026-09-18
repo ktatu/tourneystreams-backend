@@ -3,7 +3,7 @@ import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig.js"
 import parseFollowedStreams from "../utils/parseFollowedStreams.js"
 
 class TwitchApi {
-    // https://dev.twitch.tv/docs/api/reference/#get-followed-channels
+    // https://dev.twitch.tv/docs/api/reference/#get-followed-streams
     static async getFollowedStreams(accessToken: string, userId: string) {
         const res = await axios.get("https://api.twitch.tv/helix/streams/followed", {
             headers: {
