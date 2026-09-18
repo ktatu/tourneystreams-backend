@@ -13,6 +13,8 @@ export const REDIS_PASSWORD = process.env.REDIS_PASSWORD as string
 export const REDIS_HOST = process.env.REDIS_HOST as string
 export const REDIS_PORT = parseInt(process.env.REDIS_PORT as string)
 
+export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY as string
+
 export const CLIENT_URL =
     process.env.ENV === "production"
         ? (process.env.CLIENT_URL_PROD as string)

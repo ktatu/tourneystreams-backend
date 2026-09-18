@@ -11,11 +11,13 @@ const app = express()
 import cors from "cors"
 import "express-async-errors"
 import twitchRouter from "./twitch/twitch.router.js"
+import youtubeRouter from "./youtube/youtube.router.js"
 
 app.use(cors())
 app.use(express.json())
 
 app.use("/twitch", twitchRouter)
+app.use("/youtube", youtubeRouter)
 
 app.get("/healthcheck", (req, res) => {
     return res.status(200).send("ok")
