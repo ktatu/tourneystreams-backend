@@ -7,15 +7,21 @@ const router = express.Router()
 router.get(
     "/",
     passport.authenticate("twitch-user", { session: false }),
-    TwitchController.getFollowedStreams
+    TwitchController.getFollowedStreams,
 )
 
 router.get("/auth", TwitchController.authenticate)
-
+/*
+router.get(
+    "/streams",
+    passport.authenticate("twitch-user", { session: false }),
+    TwitchController.getStreams
+)
+*/
 router.get(
     "/redirect",
     passport.authenticate("twitch-auth", { session: false }),
-    TwitchController.authRedirect
+    TwitchController.authRedirect,
 )
 
 export default router

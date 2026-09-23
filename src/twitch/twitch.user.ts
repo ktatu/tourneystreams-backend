@@ -29,7 +29,7 @@ class TwitchUser {
 
     public static get = async (
         userId: string,
-        callback: (err: Error | null, twitchUser: TwitchUser | null) => void
+        callback: (err: Error | null, twitchUser: TwitchUser | null) => void,
     ) => {
         try {
             const entity = await repository.fetch(userId)
@@ -66,7 +66,7 @@ class TwitchUser {
         await repository.remove(userId)
     }
 
-    public static createToken = (userId: string) => {
+    public static createJWT = (userId: string) => {
         return jwt.sign({ userId }, JWT_SECRET)
     }
 
@@ -90,7 +90,7 @@ class TwitchUser {
         const twitchUser = new TwitchUser(
             parseString(entity.accessToken, "accessToken"),
             parseString(entity.refreshToken, "refreshToken"),
-            parseString(entity.userId, "userId")
+            parseString(entity.userId, "userId"),
         )
 
         return twitchUser

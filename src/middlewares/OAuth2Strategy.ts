@@ -17,7 +17,7 @@ const OAuth2Strategy = passport.use(
             accessToken: string,
             refreshToken: string,
             _profile: Express.User,
-            done: DoneCallback
+            done: DoneCallback,
         ) => {
             const userId = await TwitchUser.save(accessToken, refreshToken)
 
@@ -25,12 +25,12 @@ const OAuth2Strategy = passport.use(
                 return done("error")
             }
 
-            const token = TwitchUser.createToken(userId)
+            const token = TwitchUser.createJWT(userId)
 
             const twitchUserProfile: Express.User = { twitchToken: token }
             return done(null, twitchUserProfile)
-        }
-    )
+        },
+    ),
 )
 
 export default OAuth2Strategy

@@ -1,10 +1,14 @@
 import { FollowedStream } from "../types/types.js"
 import { parseNumber, parseString } from "./parseHelpers.js"
 
-const parseFollowedStreams = (rawDataArray: Array<unknown>) => {
+const parseFollowedStreams = (rawData: unknown) => {
+    if (!(rawData instanceof Array)) {
+        throw new Error("Unexpected response data format")
+    }
+
     const parsedArray: Array<FollowedStream> = []
 
-    rawDataArray.forEach((dataObj) => {
+    rawData.forEach((dataObj) => {
         try {
             const followedStream = parseRawData(dataObj)
             parsedArray.push(followedStream)
