@@ -16,3 +16,9 @@ export interface FollowedStream {
     viewerCount: number
     profileImageUrl?: string
 }
+
+export interface Stream {
+    loginName: string
+    broadcastName: string
+    viewerCount: number
+}
