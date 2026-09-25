@@ -16,6 +16,8 @@ class YoutubeApi {
             throw new Error(`No video found for id ${videoId}`)
         }
 
+        console.log("youtube api")
+
         return item.snippet.channelTitle
     }
 }
