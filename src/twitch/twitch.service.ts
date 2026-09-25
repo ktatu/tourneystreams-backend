@@ -13,6 +13,10 @@ class TwitchService {
 
         return streamsWithProfileImageUrls
     }
+
+    static async getStreams(user: TwitchUser) {
+        return null
+    }
 }
 
 export default TwitchService

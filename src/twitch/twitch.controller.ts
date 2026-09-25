@@ -22,7 +22,23 @@ class TwitchController {
         }
     }
 
+    /*
+    static getStreams: RequestHandler = async (req, res, next) => {
+        if (!req.user?.twitchUser) {
+            return next(createHttpError(500, "Unexpected error"))
+        }
+
+        try {
+            const streams = await TwitchService.getStreams(req.user.twitchUser)
+        } catch (err: unknown) {
+            const error = validateError(err)
+            console.error("error in getStreams ", error.message)
+        }
+    }
+    */
+
     static authenticate: RequestHandler = async (req, res, next) => {
+        console.log("twitch controller, authenticate endpoint")
         passport.authenticate("twitch-auth", {
             scope: "user:read:follows",
             session: false,
@@ -32,6 +48,7 @@ class TwitchController {
 
     static authRedirect: RequestHandler = async (req, res, next) => {
         if (!req.user?.twitchToken) {
+            console.log("twitch controller authRedirect: no twitch token")
             return next(createHttpError(500, "Unexpected error"))
         }
 
@@ -40,6 +57,7 @@ class TwitchController {
 
         res.cookie("twitch-token", req.user.twitchToken)
 
+        console.log("twitch controller authRedirect: redirecting to: ", urlString)
         return res.redirect(urlString)
     }
 }

@@ -53,6 +53,19 @@ class TwitchApi {
         return parsedStreams
     }
 
+    // https://dev.twitch.tv/docs/api/reference/#get-streams
+    /*
+    static async getStreams(user: TwitchUser) {
+        const res = await twitchAxios.get("https://api.twitch.tv/helix/streams", {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`,
+                "Client-Id": TWITCH_CLIENT_ID,
+            },
+            params: { user_id: user.userId, first: 100 },
+            twitchUser: user,
+        })
+    }*/
+
     // https://dev.twitch.tv/docs/api/reference#get-users
     static async getProfileImageUrls(accessToken: string, loginNames: Array<string>) {
         const res = await twitchAxios.get("https://api.twitch.tv/helix/users", {

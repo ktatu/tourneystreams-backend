@@ -11,6 +11,7 @@ router.get(
 )
 
 router.get("/auth", TwitchController.authenticate)
+
 /*
 router.get(
     "/streams",
