@@ -8,3 +8,12 @@ For general information about the project, check out the [frontend repository](h
 ### Local development
 
 These instructions are for backend only.
+
+#### Twitch api
+
+#### YouTube api
+
+#### Redis
+
+Note:
+The app requires the redis instance to have the (RedisJSON)[https://github.com/RedisJSON/RedisJSON/tree/master] module installed. Any redis version above 8.0 should have it on by default.
