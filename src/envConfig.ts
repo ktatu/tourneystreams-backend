@@ -15,10 +15,7 @@ export const REDIS_PORT = parseInt(process.env.REDIS_PORT as string)
 
 export const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY as string
 
-export const CLIENT_URL =
-    process.env.ENV === "production"
-        ? (process.env.CLIENT_URL_PROD as string)
-        : (process.env.CLIENT_URL_DEV as string)
+export const CLIENT_URL = process.env.CLIENT_URL as string
 
 if (!(TWITCH_CLIENT_ID && TWITCH_CLIENT_SECRET && TWITCH_CALLBACK_URL && JWT_SECRET)) {
     console.error("All env variables have not been set, process exiting")
