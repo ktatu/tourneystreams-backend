@@ -3,6 +3,8 @@
 
 # tourneystreams-backend
 
-https://tourneystreams.onrender.com/
+For general information about the project, check out the [frontend repository](https://github.com/ktatu/tourneystreams-frontend)
 
-The site may load extremely slowly if it hasn't been used or updated recently
+### Local development
+
+These instructions are for backend only.
