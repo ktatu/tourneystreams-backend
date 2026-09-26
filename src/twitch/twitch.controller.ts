@@ -57,7 +57,7 @@ class TwitchController {
             httpOnly: true,
             secure: true,
             sameSite: "lax",
-            maxAge: 864000,
+            maxAge: 518400000,
         })
 
         return res.redirect(urlString)
