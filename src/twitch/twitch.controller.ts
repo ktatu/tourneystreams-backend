@@ -9,11 +9,8 @@ import TwitchService from "./twitch.service.js"
 class TwitchController {
     static getFollowedStreams: RequestHandler = async (req, res, next) => {
         if (!req.user?.twitchUser) {
-            console.log("get followed streams no twitch user")
             return next(createHttpError(500, "Unexpected error"))
         }
-
-        console.log("get followed streams")
 
         try {
             const followedStreams = await TwitchService.getFollowedStreams(req.user.twitchUser)
@@ -41,7 +38,6 @@ class TwitchController {
     */
 
     static authenticate: RequestHandler = async (req, res, next) => {
-        console.log("twitch controller, authenticate endpoint")
         passport.authenticate("twitch-auth", {
             scope: "user:read:follows",
             session: false,
@@ -51,7 +47,6 @@ class TwitchController {
 
     static authRedirect: RequestHandler = async (req, res, next) => {
         if (!req.user?.twitchToken) {
-            console.log("twitch controller authRedirect: no twitch token")
             return next(createHttpError(500, "Unexpected error"))
         }
 
@@ -62,11 +57,9 @@ class TwitchController {
             httpOnly: true,
             secure: true,
             sameSite: "lax",
-            maxAge: 864000, // 10 days
+            maxAge: 864000,
         })
 
-        console.log("jwt in controller authRedirect ", req.user?.twitchToken)
-        console.log("controller authRedirect: redirecting to: ", urlString)
         return res.redirect(urlString)
     }
 }

@@ -22,20 +22,12 @@ const OAuth2Strategy = passport.use(
             const userId = await TwitchUser.save(accessToken, refreshToken)
 
             if (!userId) {
-                console.log("oauth2 strat: no user id")
                 return done("error")
             }
 
             const token = TwitchUser.createJWT(userId)
 
-            if (token) {
-                console.log("oauth2 created a jwt ", token)
-            } else {
-                console.log("oauth2 didnt make a jwt")
-            }
-
             const twitchUserProfile: Express.User = { twitchToken: token }
-            console.log("oauth2 strat: twitch user added")
             return done(null, twitchUserProfile)
         },
     ),
