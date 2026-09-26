@@ -11,6 +11,8 @@ These instructions are for backend only.
 
 #### Twitch api
 
+https://dev.twitch.tv/docs/authentication/register-app
+
 #### YouTube api
 
 #### Redis
