@@ -28,6 +28,12 @@ const OAuth2Strategy = passport.use(
 
             const token = TwitchUser.createJWT(userId)
 
+            if (token) {
+                console.log("oauth2 created a jwt")
+            } else {
+                console.log("oauth2 didnt make a jwt")
+            }
+
             const twitchUserProfile: Express.User = { twitchToken: token }
             console.log("oauth2 strat: twitch user added")
             return done(null, twitchUserProfile)

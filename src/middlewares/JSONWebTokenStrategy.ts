@@ -9,6 +9,7 @@ const extractJwtFromCookie = (req: Request) => {
     if (jwt === null) {
         console.log("jwt is null")
     }
+
     return jwt
 }
 
