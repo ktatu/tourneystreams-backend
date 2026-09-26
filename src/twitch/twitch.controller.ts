@@ -9,8 +9,11 @@ import TwitchService from "./twitch.service.js"
 class TwitchController {
     static getFollowedStreams: RequestHandler = async (req, res, next) => {
         if (!req.user?.twitchUser) {
+            console.log("get followed streams no twitch user")
             return next(createHttpError(500, "Unexpected error"))
         }
+
+        console.log("get followed streams")
 
         try {
             const followedStreams = await TwitchService.getFollowedStreams(req.user.twitchUser)
