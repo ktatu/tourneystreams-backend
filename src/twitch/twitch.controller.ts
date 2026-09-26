@@ -55,7 +55,12 @@ class TwitchController {
         const { state } = req.query
         const urlString = formatUrl({ pathname: CLIENT_URL, query: JSON.parse(state as string) })
 
-        res.cookie("twitch-token", req.user.twitchToken)
+        res.cookie("twitch-token", req.user.twitchToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "lax",
+            maxAge: 864000, // 10 days
+        })
 
         console.log("twitch controller authRedirect: redirecting to: ", urlString)
         return res.redirect(urlString)

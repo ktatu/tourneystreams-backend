@@ -1,10 +1,16 @@
+import { Request } from "express"
 import passport from "passport"
-import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt"
+import { Strategy, StrategyOptions } from "passport-jwt"
 import { JWT_SECRET } from "../envConfig.js"
 import TwitchUser from "../twitch/twitch.user.js"
 
+const extractJwtFromCookie = (req: Request) => {
+    const jwt = req.cookies?.["twitch-token"] || null
+    return jwt
+}
+
 const strategyOptions: StrategyOptions = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: extractJwtFromCookie,
     secretOrKey: JWT_SECRET,
 }
 
@@ -23,7 +29,7 @@ passport.use(
 
             return done(null, false)
         })
-    })
+    }),
 )
 
 export default {}

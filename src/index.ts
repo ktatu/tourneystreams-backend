@@ -1,4 +1,5 @@
 import express from "express"
+import { CLIENT_URL } from "./envConfig.js"
 import errorHandler from "./middlewares/errorHandler.js"
 import unknownEndpointHandler from "./middlewares/unknownEndpointHandler.js"
 import redis from "./redis.js"
@@ -8,13 +9,15 @@ import "./middlewares/OAuth2Strategy.js"
 
 const app = express()
 
+import cookieParser from "cookie-parser"
 import cors from "cors"
 import "express-async-errors"
 import twitchRouter from "./twitch/twitch.router.js"
 import youtubeRouter from "./youtube/youtube.router.js"
 
-app.use(cors())
+app.use(cors({ origin: CLIENT_URL, credentials: true }))
 app.use(express.json())
+app.use(cookieParser())
 
 app.use("/twitch", twitchRouter)
 app.use("/youtube", youtubeRouter)
