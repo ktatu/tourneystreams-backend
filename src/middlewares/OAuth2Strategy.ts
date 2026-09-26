@@ -29,7 +29,7 @@ const OAuth2Strategy = passport.use(
             const token = TwitchUser.createJWT(userId)
 
             if (token) {
-                console.log("oauth2 created a jwt")
+                console.log("oauth2 created a jwt ", token)
             } else {
                 console.log("oauth2 didnt make a jwt")
             }

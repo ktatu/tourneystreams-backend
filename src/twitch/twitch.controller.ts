@@ -65,7 +65,8 @@ class TwitchController {
             maxAge: 864000, // 10 days
         })
 
-        console.log("twitch controller authRedirect: redirecting to: ", urlString)
+        console.log("jwt in controller authRedirect ", req.user?.twitchToken)
+        console.log("controller authRedirect: redirecting to: ", urlString)
         return res.redirect(urlString)
     }
 }
