@@ -9,6 +9,8 @@ For general information about the project, check out the [frontend repository](h
 
 These instructions are for backend only.
 
+Don't use safari. The app uses secure cookies, which clashes with the app running on localhost, according to [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies#block_access_to_your_cookies),
+
 #### Twitch api
 
 https://dev.twitch.tv/docs/authentication/register-app
