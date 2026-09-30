@@ -22,6 +22,7 @@
         "arrow-spacing": "error",
         "block-spacing": "error",
         "quotes": ["error", "double"],
-        "semi": ["error", "never"]
+        "semi": ["error", "never"],
+        "sort-keys": "warn"
     }
 }
