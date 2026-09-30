@@ -12,13 +12,12 @@ router.get(
 
 router.get("/auth", TwitchController.authenticate)
 
-/*
 router.get(
     "/streams",
     passport.authenticate("twitch-user", { session: false }),
-    TwitchController.getStreams
+    TwitchController.getStreams,
 )
-*/
+
 router.get(
     "/redirect",
     passport.authenticate("twitch-auth", { session: false }),

@@ -15,7 +15,8 @@ class TwitchService {
     }
 
     static async getStreams(user: TwitchUser) {
-        return null
+        const streams = await TwitchApi.getStreams(user)
+        return streams
     }
 }
 

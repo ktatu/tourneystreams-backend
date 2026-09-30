@@ -8,17 +8,11 @@ declare module "axios" {
     }
 }
 
-export interface FollowedStream {
+export interface Stream {
     category: string
     title: string
     loginName: string
     broadcastName: string
     viewerCount: number
     profileImageUrl?: string
-}
-
-export interface Stream {
-    loginName: string
-    broadcastName: string
-    viewerCount: number
 }

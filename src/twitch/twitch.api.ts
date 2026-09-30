@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios"
 import { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig.js"
-import parseFollowedStreams from "../utils/parseFollowedStreams.js"
 import parseProfileImageUrls from "../utils/parseProfileImageUrls.js"
+import parseStreams from "../utils/parseStreams.js"
 import validateError from "../utils/validateError.js"
 import TwitchUser from "./twitch.user.js"
 
@@ -49,12 +49,11 @@ class TwitchApi {
             twitchUser: user,
         })
 
-        const parsedStreams = parseFollowedStreams(res.data.data)
+        const parsedStreams = parseStreams(res.data.data)
         return parsedStreams
     }
 
     // https://dev.twitch.tv/docs/api/reference/#get-streams
-    /*
     static async getStreams(user: TwitchUser) {
         const res = await twitchAxios.get("https://api.twitch.tv/helix/streams", {
             headers: {
@@ -64,7 +63,10 @@ class TwitchApi {
             params: { user_id: user.userId, first: 100 },
             twitchUser: user,
         })
-    }*/
+
+        const parsedStreams = parseStreams(res.data.data)
+        return parsedStreams
+    }
 
     // https://dev.twitch.tv/docs/api/reference#get-users
     static async getProfileImageUrls(accessToken: string, loginNames: Array<string>) {

@@ -22,7 +22,6 @@ class TwitchController {
         }
     }
 
-    /*
     static getStreams: RequestHandler = async (req, res, next) => {
         if (!req.user?.twitchUser) {
             return next(createHttpError(500, "Unexpected error"))
@@ -30,12 +29,12 @@ class TwitchController {
 
         try {
             const streams = await TwitchService.getStreams(req.user.twitchUser)
+            return res.json({ streams })
         } catch (err: unknown) {
             const error = validateError(err)
             console.error("error in getStreams ", error.message)
         }
     }
-    */
 
     static authenticate: RequestHandler = async (req, res, next) => {
         passport.authenticate("twitch-auth", {
@@ -56,7 +55,7 @@ class TwitchController {
         res.cookie("twitch-token", req.user.twitchToken, {
             httpOnly: true,
             secure: true,
-            sameSite: "lax",
+            sameSite: "strict",
             maxAge: 518400000,
         })
 
