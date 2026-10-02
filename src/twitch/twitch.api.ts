@@ -54,13 +54,14 @@ class TwitchApi {
     }
 
     // https://dev.twitch.tv/docs/api/reference/#get-streams
-    static async getStreams(user: TwitchUser) {
+    static async getStreams(user: TwitchUser, channels: Array<string>) {
         const res = await twitchAxios.get("https://api.twitch.tv/helix/streams", {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`,
                 "Client-Id": TWITCH_CLIENT_ID,
             },
-            params: { user_id: user.userId, first: 100 },
+            params: { first: 100, user_id: user.userId, user_login: channels },
+            paramsSerializer: { indexes: null },
             twitchUser: user,
         })
 

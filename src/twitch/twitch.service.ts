@@ -14,8 +14,8 @@ class TwitchService {
         return streamsWithProfileImageUrls
     }
 
-    static async getStreams(user: TwitchUser) {
-        const streams = await TwitchApi.getStreams(user)
+    static async getStreams(user: TwitchUser, channels: Array<string>) {
+        const streams = await TwitchApi.getStreams(user, channels)
         return streams
     }
 }
