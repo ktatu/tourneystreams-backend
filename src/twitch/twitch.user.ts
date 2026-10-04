@@ -6,6 +6,8 @@ import { parseString } from "../utils/parseHelpers.js"
 import validateError from "../utils/validateError.js"
 import TwitchApi from "./twitch.api.js"
 
+const USER_EXPIRATION_TIME = 2629800 // 1 month in seconds
+
 const twitchUserSchema = new Schema("twitchUser", {
     accessToken: { type: "string" },
     refreshToken: { type: "string" },
@@ -83,7 +85,7 @@ class TwitchUser {
     }
 
     private static setEntityExpiration = (userId: string) => {
-        repository.expire(userId, 2629800) // 1 month
+        repository.expire(userId, USER_EXPIRATION_TIME)
     }
 
     private static parseTwitchUserEntity = (entity: Entity) => {

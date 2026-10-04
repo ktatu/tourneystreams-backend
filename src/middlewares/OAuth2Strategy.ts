@@ -2,6 +2,7 @@ import passport, { DoneCallback } from "passport"
 import { Strategy } from "passport-oauth2"
 import { TWITCH_CALLBACK_URL, TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } from "../envConfig.js"
 import TwitchUser from "../twitch/twitch.user.js"
+import validateError from "../utils/validateError.js"
 
 const OAuth2Strategy = passport.use(
     "twitch-auth",
@@ -19,16 +20,20 @@ const OAuth2Strategy = passport.use(
             _profile: Express.User,
             done: DoneCallback,
         ) => {
-            const userId = await TwitchUser.save(accessToken, refreshToken)
+            try {
+                const userId = await TwitchUser.save(accessToken, refreshToken)
 
-            if (!userId) {
-                return done("error")
+                if (!userId) {
+                    throw new Error("Unexpected error: unable to save authenticated twitch user")
+                }
+                const token = TwitchUser.createJWT(userId)
+                const twitchUserProfile: Express.User = { twitchToken: token }
+
+                return done(null, twitchUserProfile)
+            } catch (err) {
+                const error = validateError(err)
+                return done(error)
             }
-
-            const token = TwitchUser.createJWT(userId)
-
-            const twitchUserProfile: Express.User = { twitchToken: token }
-            return done(null, twitchUserProfile)
         },
     ),
 )

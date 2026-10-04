@@ -17,8 +17,8 @@ import youtubeRouter from "./youtube/youtube.router.js"
 
 app.use(cors({ origin: CLIENT_URL, credentials: true }))
 app.use(express.json())
-app.use(cookieParser())
 
+app.use(cookieParser())
 app.use("/twitch", twitchRouter)
 app.use("/youtube", youtubeRouter)
 
