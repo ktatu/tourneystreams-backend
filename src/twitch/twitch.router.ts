@@ -20,6 +20,7 @@ router.get(
 
 router.get(
     "/redirect",
+    TwitchController.verifyState,
     passport.authenticate("twitch-auth", { session: false }),
     TwitchController.authRedirect,
 )
