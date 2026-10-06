@@ -1,4 +1,5 @@
 // Claude Sonnet 5.5 (AI) added the OAuth state generation and verification (authenticate, verifyState, authRedirect).
+// GitHub Copilot aligned the authentication cookie lifetime with the shared user-data duration.
 import { randomBytes, timingSafeEqual } from "crypto"
 import { RequestHandler } from "express"
 import createHttpError from "http-errors"
@@ -6,6 +7,7 @@ import passport from "passport"
 import { format as formatUrl } from "url"
 import { CLIENT_URL } from "../envConfig.js"
 import { parseGetStreamsQueryParams } from "../utils/parseGetStreamsParams.js"
+import { userDataExpirationTime } from "../utils/userDataExpiration.js"
 import validateError from "../utils/validateError.js"
 import TwitchService from "./twitch.service.js"
 
@@ -99,7 +101,7 @@ class TwitchController {
             httpOnly: true,
             secure: true,
             sameSite: "strict",
-            maxAge: 518400000,
+            maxAge: userDataExpirationTime("ms"),
         })
 
         return res.redirect(urlString)
