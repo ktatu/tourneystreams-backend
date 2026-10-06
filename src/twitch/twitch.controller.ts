@@ -1,5 +1,4 @@
 // Claude Sonnet 5.5 (AI) added the OAuth state generation and verification (authenticate, verifyState, authRedirect).
-// GitHub Copilot aligned the authentication cookie lifetime with the shared user-data duration.
 import { randomBytes, timingSafeEqual } from "crypto"
 import { RequestHandler } from "express"
 import createHttpError from "http-errors"

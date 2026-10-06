@@ -7,7 +7,7 @@ import TwitchUser from "./twitch.user.js"
 
 const twitchAxios = axios.create()
 
-// refresh access token when twitch returns 401 and resend request -- expired access token is the most likely cause of the failed request
+// refreshing access token when twitch returns 401 and resend request -- expired access token is the most likely cause of the failed request
 twitchAxios.interceptors.response.use(
     (response) => response,
     async (error) => {
