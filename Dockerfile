@@ -1,4 +1,4 @@
-FROM node:18.16.1-alpine as typescript-compilation
+FROM node:24-alpine as typescript-compilation
 
 WORKDIR /usr/src/app
 
@@ -8,7 +8,7 @@ RUN npm ci
 
 RUN npm run tsc
 
-FROM node:18.16.1-alpine
+FROM node:24-alpine
 
 EXPOSE 10000
 
