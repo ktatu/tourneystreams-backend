@@ -5,7 +5,7 @@
 
 For general information about the project, check out the [frontend repository](https://github.com/ktatu/tourneystreams-frontend)
 
-### Local development
+## Local development
 
 Don't use safari. The app uses secure cookies, which clashes with running on localhost, according to [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Cookies#block_access_to_your_cookies)
 
