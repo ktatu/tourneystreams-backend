@@ -13,8 +13,8 @@ For setting up environment variables, you can use .env_example as base. Remember
 
 Insert the following env variables:
 
-- CLIENT_URL: where your frontend runs. This should be http://localhost:3000 by default.
-- JWT_SECRET: a randomly generated string.
+- `CLIENT_URL`: where your frontend runs. This should be http://localhost:3000 by default.
+- `JWT_SECRET`: a randomly generated string.
 
 #### Twitch api
 
@@ -22,7 +22,7 @@ Follow the instructions on https://dev.twitch.tv/docs/authentication/register-ap
 
 1. When registering the application, use http://localhost:3001/twitch/redirect as the redirect URL. The form may initially say "https only", but it will accept localhost
 
-2. In your application management page, there will be client ID, redirect url (same as above), and client secret. Save these in the keys TWITCH_CLIENT_ID, TWITCH_CALLBACK_URL and TWITCH_CLIENT_SECRET of the .env file
+2. In your application management page, there will be client ID, redirect url (same as above), and client secret. Save these in the keys `TWITCH_CLIENT_ID`, `TWITCH_CALLBACK_URL` and `TWITCH_CLIENT_SECRET` of the .env file
 
 3. Make sure you have some channels followed for testing the app. The button is on the bottom-right of streams
 
@@ -38,7 +38,7 @@ Alternatively, you can follow these instructions after you've created a project:
 2. Click "Create credentials" on top
 3. Select "API key" in the dropdown selection
 4. Select "YouTube Data API v3" in the API restrictions selection, and click create
-5. Place the key in YOUTUBE_API_KEY in .env
+5. Place the key in `YOUTUBE_API_KEY` in .env
 
 #### Redis
 
@@ -48,14 +48,14 @@ The quick-start instructions for Redis Cloud are [here](https://redis.io/docs/la
 
 You have two options for setting up the env variables:
 
-- Use the an url connection string, which has the format of redis://username:password@host:port. You can place this in REDIS_URL.
-- You can also place the connection parameters separately, in REDIS_HOST, REDIS_PASSWORD, REDIS_PORT and REDIS_USERNAME
+- Use the an url connection string, which has the format of redis://username:password@host:port. You can place this in `REDIS_URL`.
+- You can also place the connection parameters separately, as env variables `REDIS_HOST`, `REDIS_PASSWORD`, `REDIS_PORT` and `REDIS_USERNAME`
 
 #### Running the backend
 
 The expected and tested node version for the backend is 24.21.0
 
-1. Install dependencies by running the command `npm install`.
+1. Install dependencies by running the command `npm ci`.
 2. Start with `npm run start:dev`
 
 The app should start in http://localhost:3001. There will be logs in console if any of the env variables are missing.

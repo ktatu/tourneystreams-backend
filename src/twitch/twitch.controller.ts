@@ -14,14 +14,12 @@ const STATE_COOKIE = "twitch-oauth-state"
 
 class TwitchController {
     static getFollowedStreams: RequestHandler = async (req, res, next) => {
-        console.log("request")
         if (!req.user?.twitchUser) {
-            return next(createHttpError(500, "Unexpected error"))
+            return next(createHttpError(401, "Unauthorized"))
         }
 
         try {
             const followedStreams = await TwitchService.getFollowedStreams(req.user.twitchUser)
-            console.log("followed streams ")
             return res.json({ streams: followedStreams })
         } catch (err: unknown) {
             const error = validateError(err)
@@ -37,11 +35,10 @@ class TwitchController {
         { params: { channels: string[] } }
     > = async (req, res, next) => {
         if (!req.user?.twitchUser) {
-            return next(createHttpError(500, "Unexpected error"))
+            return next(createHttpError(401, "Unauthorized"))
         }
 
         try {
-            console.log(req.query.params.channels)
             const parsedChannels: Array<string> = parseGetStreamsQueryParams(
                 req.query.params.channels,
             )
@@ -91,7 +88,7 @@ class TwitchController {
 
     static authRedirect: RequestHandler = async (req, res, next) => {
         if (!req.user?.twitchToken) {
-            return next(createHttpError(500, "Unexpected error"))
+            return next(createHttpError(401, "Unauthorized"))
         }
 
         const urlString = formatUrl({ pathname: CLIENT_URL })
