@@ -37,11 +37,10 @@ class TwitchUser {
 
             if (this.incompleteOrMissingEntity(entity)) {
                 callback(null, null)
+            } else {
+                const twitchUser = this.parseTwitchUserEntity(entity)
+                callback(null, twitchUser)
             }
-
-            const twitchUser = this.parseTwitchUserEntity(entity)
-
-            callback(null, twitchUser)
         } catch (err) {
             const error = validateError(err)
 
