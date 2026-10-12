@@ -9,6 +9,7 @@ import { parseGetStreamsQueryParams } from "../utils/parseGetStreamsParams.js"
 import { userDataExpirationTime } from "../utils/userDataExpiration.js"
 import validateError from "../utils/validateError.js"
 import TwitchService from "./twitch.service.js"
+import { AxiosError } from "axios"
 
 const STATE_COOKIE = "twitch-oauth-state"
 
@@ -24,6 +25,14 @@ class TwitchController {
         } catch (err: unknown) {
             const error = validateError(err)
             console.error("error in getFollowedStreams ", error.message)
+
+            // meaning that twitch responded with one of these, so we make client reauth
+            if (error instanceof AxiosError) {
+                if (error.status === 400 || error.status === 401) {
+                    return res.status(401).end()
+                }
+            }
+
             return res.status(500).end()
         }
     }
@@ -47,6 +56,14 @@ class TwitchController {
         } catch (err: unknown) {
             const error = validateError(err)
             console.error("error in getStreams ", error.message)
+
+            // meaning that twitch responded with one of these, so we make client reauth
+            if (error instanceof AxiosError) {
+                if (error.status === 400 || error.status === 401) {
+                    return res.status(401).end()
+                }
+            }
+
             return res.status(500).end()
         }
     }
