@@ -40,6 +40,7 @@ twitchAxios.interceptors.response.use(
 class TwitchApi {
     // https://dev.twitch.tv/docs/api/reference/#get-followed-streams
     static async getFollowedStreams(user: TwitchUser) {
+        console.log("user id ", user.userId)
         const res = await twitchAxios.get("https://api.twitch.tv/helix/streams/followed", {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`,
